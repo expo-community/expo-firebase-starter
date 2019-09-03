@@ -12,6 +12,6 @@ const SwitchNavigator = createSwitchNavigator(
   }
 )
 
-const Navigator = createAppContainer(SwitchNavigator)
+const AppContainer = createAppContainer(AuthNavigation)
 
-export default Navigator
+export default AppContainer
