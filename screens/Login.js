@@ -23,7 +23,9 @@ export default class Login extends React.Component {
 
   handleSubmit = values => {
     if (values.email.length > 0 && values.password.length > 0) {
-      this.props.navigation.navigate('App')
+      setTimeout(() => {
+        this.props.navigation.navigate('App')
+      }, 3000)
     }
   }
 
@@ -43,7 +45,8 @@ export default class Login extends React.Component {
             errors,
             isValid,
             touched,
-            handleBlur
+            handleBlur,
+            isSubmitting
           }) => (
             <Fragment>
               <FormInput
@@ -75,7 +78,8 @@ export default class Login extends React.Component {
                   onPress={handleSubmit}
                   title='LOGIN'
                   buttonColor='#039BE5'
-                  disabled={!isValid}
+                  disabled={!isValid || isSubmitting}
+                  loading={isSubmitting}
                 />
               </View>
             </Fragment>
