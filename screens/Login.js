@@ -1,66 +1,51 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { StyleSheet, SafeAreaView, View } from 'react-native'
 import { Button } from 'react-native-elements'
+import { Formik } from 'formik'
 import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 
 export default class Login extends React.Component {
-  state = {
-    email: '',
-    password: ''
-  }
-
-  handleEmailChange = email => {
-    this.setState({ email })
-  }
-
-  handlePasswordChange = password => {
-    this.setState({ password })
-  }
-
-  onLogin = async () => {
-    const { email, password } = this.state
-    try {
-      if (email.length > 0 && password.length > 0) {
-        this.props.navigation.navigate('App')
-      }
-    } catch (error) {
-      alert(error)
-    }
-  }
-
   goToSignup = () => this.props.navigation.navigate('Signup')
   render() {
-    const { email, password } = this.state
-
     return (
       <SafeAreaView style={styles.container}>
-        <FormInput
-          name='email'
-          value={email}
-          placeholder='Enter email'
-          autoCapitalize='none'
-          onChangeText={this.handleEmailChange}
-          iconName='ios-mail'
-          iconColor='#2C384A'
-        />
-        <FormInput
-          name='password'
-          value={password}
-          placeholder='Enter password'
-          secureTextEntry
-          onChangeText={this.handlePasswordChange}
-          iconName='ios-lock'
-          iconColor='#2C384A'
-        />
-        <View style={styles.buttonContainer}>
-          <FormButton
-            buttonType='outline'
-            onPress={this.handleOnLogin}
-            title='LOGIN'
-            buttonColor='#039BE5'
-          />
-        </View>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          onSubmit={values => {
+            alert(JSON.stringify(values))
+          }}>
+          {({ handleChange, values, handleSubmit }) => (
+            <Fragment>
+              <FormInput
+                name='email'
+                value={values.email}
+                onChangeText={handleChange('email')}
+                placeholder='Enter email'
+                autoCapitalize='none'
+                iconName='ios-mail'
+                iconColor='#2C384A'
+              />
+              <FormInput
+                name='password'
+                value={values.password}
+                onChangeText={handleChange('password')}
+                placeholder='Enter password'
+                secureTextEntry
+                iconName='ios-lock'
+                iconColor='#2C384A'
+              />
+              <View style={styles.buttonContainer}>
+                <FormButton
+                  buttonType='outline'
+                  onPress={handleSubmit}
+                  title='LOGIN'
+                  buttonColor='#039BE5'
+                />
+              </View>
+            </Fragment>
+          )}
+        </Formik>
         <Button
           title="Don't have an account? Sign Up"
           onPress={this.goToSignup}

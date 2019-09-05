@@ -10,7 +10,7 @@ const FormInput = ({
   keyboardType,
   name,
   placeholder,
-  value,
+
   ...rest
 }) => (
   <View style={styles.inputContainer}>
@@ -19,7 +19,6 @@ const FormInput = ({
       leftIconContainerStyle={styles.iconStyle}
       placeholderTextColor='grey'
       name={name}
-      value={value}
       placeholder={placeholder}
       style={styles.input}
       {...rest}
