@@ -6,6 +6,7 @@ import * as Yup from 'yup'
 import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
+import AppLogo from '../components/AppLogo'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -32,6 +33,9 @@ export default class Login extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        <View style={styles.logoContainer}>
+          <AppLogo />
+        </View>
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={values => {
@@ -102,6 +106,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff'
+  },
+  logoContainer: {
+    marginTop: 50,
+    alignItems: 'center'
   },
   buttonContainer: {
     margin: 25
