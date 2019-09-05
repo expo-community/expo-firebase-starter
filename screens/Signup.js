@@ -74,7 +74,6 @@ export default class Signup extends React.Component {
                 iconName='md-person'
                 iconColor='#2C384A'
                 onBlur={handleBlur('name')}
-                autoFocus
               />
               <ErrorMessage errorValue={touched.name && errors.name} />
               <FormInput
@@ -145,6 +144,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     marginTop: 50,
+    marginBottom: 15,
     alignItems: 'center'
   },
   buttonContainer: {
