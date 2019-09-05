@@ -36,7 +36,15 @@ export default class Login extends React.Component {
             this.handleSubmit(values)
           }}
           validationSchema={validationSchema}>
-          {({ handleChange, values, handleSubmit, errors, isValid }) => (
+          {({
+            handleChange,
+            values,
+            handleSubmit,
+            errors,
+            isValid,
+            touched,
+            handleBlur
+          }) => (
             <Fragment>
               <FormInput
                 name='email'
@@ -46,8 +54,10 @@ export default class Login extends React.Component {
                 autoCapitalize='none'
                 iconName='ios-mail'
                 iconColor='#2C384A'
+                onBlur={handleBlur('email')}
+                autoFocus
               />
-              <ErrorMessage errorValue={errors.email} />
+              <ErrorMessage errorValue={touched.email && errors.email} />
               <FormInput
                 name='password'
                 value={values.password}
@@ -56,8 +66,9 @@ export default class Login extends React.Component {
                 secureTextEntry
                 iconName='ios-lock'
                 iconColor='#2C384A'
+                onBlur={handleBlur('password')}
               />
-              <ErrorMessage errorValue={errors.password} />
+              <ErrorMessage errorValue={touched.password && errors.password} />
               <View style={styles.buttonContainer}>
                 <FormButton
                   buttonType='outline'
