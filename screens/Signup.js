@@ -7,7 +7,7 @@ import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
 import AppLogo from '../components/AppLogo'
-
+import { HideWithKeyboard } from 'react-native-hide-with-keyboard'
 const validationSchema = Yup.object().shape({
   name: Yup.string()
     .label('Name')
@@ -40,10 +40,9 @@ export default class Signup extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.logoContainer}>
+        <HideWithKeyboard style={styles.logoContainer}>
           <AppLogo />
-        </View>
-
+        </HideWithKeyboard>
         <Formik
           initialValues={{
             name: '',
@@ -140,10 +139,10 @@ export default class Signup extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    marginTop: 50
   },
   logoContainer: {
-    marginTop: 50,
     marginBottom: 15,
     alignItems: 'center'
   },

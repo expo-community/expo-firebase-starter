@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView, View } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import { HideWithKeyboard } from 'react-native-hide-with-keyboard'
 import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
@@ -33,9 +34,9 @@ export default class Login extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.logoContainer}>
+        <HideWithKeyboard style={styles.logoContainer}>
           <AppLogo />
-        </View>
+        </HideWithKeyboard>
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={values => {
@@ -62,7 +63,6 @@ export default class Login extends React.Component {
                 iconName='ios-mail'
                 iconColor='#2C384A'
                 onBlur={handleBlur('email')}
-                autoFocus
               />
               <ErrorMessage errorValue={touched.email && errors.email} />
               <FormInput
@@ -105,10 +105,10 @@ export default class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    marginTop: 50
   },
   logoContainer: {
-    marginTop: 50,
     marginBottom: 15,
     alignItems: 'center'
   },
