@@ -7,13 +7,20 @@ import FormButton from '../components/FormButton'
 
 export default class Login extends React.Component {
   goToSignup = () => this.props.navigation.navigate('Signup')
+
+  handleSubmit = values => {
+    if (values.email.length > 0 && values.password.length > 0) {
+      this.props.navigation.navigate('App')
+    }
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={values => {
-            alert(JSON.stringify(values))
+            this.handleSubmit(values)
           }}>
           {({ handleChange, values, handleSubmit }) => (
             <Fragment>
