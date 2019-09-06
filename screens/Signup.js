@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { StyleSheet, SafeAreaView, View } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Formik } from 'formik'
@@ -8,6 +8,7 @@ import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
 import AppLogo from '../components/AppLogo'
 import { HideWithKeyboard } from 'react-native-hide-with-keyboard'
+
 const validationSchema = Yup.object().shape({
   name: Yup.string()
     .label('Name')
@@ -26,7 +27,7 @@ const validationSchema = Yup.object().shape({
     .required('Confirm Password is required')
 })
 
-export default class Signup extends React.Component {
+export default class Signup extends Component {
   goToLogin = () => this.props.navigation.navigate('Login')
 
   handleSubmit = values => {

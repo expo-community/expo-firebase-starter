@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import { StyleSheet, SafeAreaView, View } from 'react-native'
 import { Button } from 'react-native-elements'
 import { Formik } from 'formik'
@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
     .min(4, 'Password must have more than 4 characters ')
 })
 
-export default class Login extends React.Component {
+export default class Login extends Component {
   goToSignup = () => this.props.navigation.navigate('Signup')
 
   handleSubmit = values => {
