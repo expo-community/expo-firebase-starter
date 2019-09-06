@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "expo": "^34.0.1",
+    "expo-asset": "6.0.0",
     "formik": "1.5.8",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
