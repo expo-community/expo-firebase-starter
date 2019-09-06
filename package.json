@@ -8,8 +8,9 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "expo": "^34.0.1",
+    "expo": "34.0.4",
     "expo-asset": "6.0.0",
+    "expo-font": "6.0.1",
     "formik": "1.5.8",
     "react": "16.8.3",
     "react-dom": "^16.8.6",

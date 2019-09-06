@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { AppLoading } from 'expo'
 import { Asset } from 'expo-asset'
+import * as Font from 'expo-font'
+import * as Icon from '@expo/vector-icons'
 
 export default class Initial extends Component {
   state = {
@@ -19,7 +21,10 @@ export default class Initial extends Component {
       Asset.loadAsync([
         require('../assets/flame.png'),
         require('../assets/icon.png')
-      ])
+      ]),
+      Font.loadAsync({
+        ...Icon.Ionicons.font
+      })
     ])
   }
 
