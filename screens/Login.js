@@ -90,7 +90,7 @@ export default class Login extends Component {
                 onBlur={handleBlur('password')}
                 rightIcon={
                   <TouchableOpacity onPress={this.handlePasswordVisibility}>
-                    <Ionicons name={rightIcon} size={24} color='grey' />
+                    <Ionicons name={rightIcon} size={28} color='grey' />
                   </TouchableOpacity>
                 }
               />
