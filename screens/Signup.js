@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { StyleSheet, SafeAreaView, View } from 'react-native'
+import { StyleSheet, SafeAreaView, View, TouchableOpacity } from 'react-native'
 import { Button, CheckBox } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import FormInput from '../components/FormInput'
@@ -27,6 +28,13 @@ const validationSchema = Yup.object().shape({
 })
 
 export default class Signup extends Component {
+  state = {
+    passwordVisibility: true,
+    confirmPasswordVisibility: true,
+    passwordIcon: 'ios-eye',
+    confirmPasswordIcon: 'ios-eye'
+  }
+
   goToLogin = () => this.props.navigation.navigate('Login')
 
   handleSubmit = values => {
@@ -37,7 +45,29 @@ export default class Signup extends Component {
     }
   }
 
+  handlePasswordVisibility = () => {
+    this.setState(prevState => ({
+      passwordIcon:
+        prevState.passwordIcon === 'ios-eye' ? 'ios-eye-off' : 'ios-eye',
+      passwordVisibility: !prevState.passwordVisibility
+    }))
+  }
+
+  handleConfirmPasswordVisibility = () => {
+    this.setState(prevState => ({
+      confirmPasswordIcon:
+        prevState.confirmPasswordIcon === 'ios-eye' ? 'ios-eye-off' : 'ios-eye',
+      confirmPasswordVisibility: !prevState.confirmPasswordVisibility
+    }))
+  }
+
   render() {
+    const {
+      passwordVisibility,
+      confirmPasswordVisibility,
+      passwordIcon,
+      confirmPasswordIcon
+    } = this.state
     return (
       <SafeAreaView style={styles.container}>
         <Formik
@@ -90,10 +120,15 @@ export default class Signup extends Component {
                 value={values.password}
                 onChangeText={handleChange('password')}
                 placeholder='Enter password'
-                secureTextEntry
                 iconName='ios-lock'
                 iconColor='#2C384A'
                 onBlur={handleBlur('password')}
+                secureTextEntry={passwordVisibility}
+                rightIcon={
+                  <TouchableOpacity onPress={this.handlePasswordVisibility}>
+                    <Ionicons name={passwordIcon} size={28} color='grey' />
+                  </TouchableOpacity>
+                }
               />
               <ErrorMessage errorValue={touched.password && errors.password} />
               <FormInput
@@ -101,10 +136,20 @@ export default class Signup extends Component {
                 value={values.confirmPassword}
                 onChangeText={handleChange('confirmPassword')}
                 placeholder='Confirm password'
-                secureTextEntry
                 iconName='ios-lock'
                 iconColor='#2C384A'
                 onBlur={handleBlur('confirmPassword')}
+                secureTextEntry={confirmPasswordVisibility}
+                rightIcon={
+                  <TouchableOpacity
+                    onPress={this.handleConfirmPasswordVisibility}>
+                    <Ionicons
+                      name={confirmPasswordIcon}
+                      size={28}
+                      color='grey'
+                    />
+                  </TouchableOpacity>
+                }
               />
               <ErrorMessage
                 errorValue={touched.confirmPassword && errors.confirmPassword}

@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { StyleSheet, SafeAreaView, View } from 'react-native'
+import { StyleSheet, SafeAreaView, View, TouchableOpacity } from 'react-native'
 import { Button } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { HideWithKeyboard } from 'react-native-hide-with-keyboard'
@@ -21,6 +22,11 @@ const validationSchema = Yup.object().shape({
 })
 
 export default class Login extends Component {
+  state = {
+    passwordVisibility: true,
+    rightIcon: 'ios-eye'
+  }
+
   goToSignup = () => this.props.navigation.navigate('Signup')
 
   handleSubmit = values => {
@@ -31,7 +37,15 @@ export default class Login extends Component {
     }
   }
 
+  handlePasswordVisibility = () => {
+    this.setState(prevState => ({
+      rightIcon: prevState.rightIcon === 'ios-eye' ? 'ios-eye-off' : 'ios-eye',
+      passwordVisibility: !prevState.passwordVisibility
+    }))
+  }
+
   render() {
+    const { passwordVisibility, rightIcon } = this.state
     return (
       <SafeAreaView style={styles.container}>
         <HideWithKeyboard style={styles.logoContainer}>
@@ -70,10 +84,15 @@ export default class Login extends Component {
                 value={values.password}
                 onChangeText={handleChange('password')}
                 placeholder='Enter password'
-                secureTextEntry
+                secureTextEntry={passwordVisibility}
                 iconName='ios-lock'
                 iconColor='#2C384A'
                 onBlur={handleBlur('password')}
+                rightIcon={
+                  <TouchableOpacity onPress={this.handlePasswordVisibility}>
+                    <Ionicons name={rightIcon} size={24} color='grey' />
+                  </TouchableOpacity>
+                }
               />
               <ErrorMessage errorValue={touched.password && errors.password} />
               <View style={styles.buttonContainer}>
