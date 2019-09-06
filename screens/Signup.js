@@ -1,13 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { StyleSheet, SafeAreaView, View } from 'react-native'
-import { Button } from 'react-native-elements'
+import { Button, CheckBox } from 'react-native-elements'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
-import AppLogo from '../components/AppLogo'
-import { HideWithKeyboard } from 'react-native-hide-with-keyboard'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -24,7 +22,8 @@ const validationSchema = Yup.object().shape({
     .min(4, 'Password must have more than 4 characters '),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Confirm Password must matched Password')
-    .required('Confirm Password is required')
+    .required('Confirm Password is required'),
+  check: Yup.boolean().oneOf([true], 'Please check the agreement')
 })
 
 export default class Signup extends Component {
@@ -41,15 +40,13 @@ export default class Signup extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <HideWithKeyboard style={styles.logoContainer}>
-          <AppLogo />
-        </HideWithKeyboard>
         <Formik
           initialValues={{
             name: '',
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            check: false
           }}
           onSubmit={values => {
             this.handleSubmit(values)
@@ -63,7 +60,8 @@ export default class Signup extends Component {
             isValid,
             touched,
             handleBlur,
-            isSubmitting
+            isSubmitting,
+            setFieldValue
           }) => (
             <Fragment>
               <FormInput
@@ -111,6 +109,16 @@ export default class Signup extends Component {
               <ErrorMessage
                 errorValue={touched.confirmPassword && errors.confirmPassword}
               />
+              <CheckBox
+                containerStyle={styles.checkBoxContainer}
+                checkedIcon='check-box'
+                iconType='material'
+                uncheckedIcon='check-box-outline-blank'
+                title='Agree to terms and conditions'
+                checkedTitle='You agreed to our terms and conditions'
+                checked={values.check}
+                onPress={() => setFieldValue('check', !values.check)}
+              />
               <View style={styles.buttonContainer}>
                 <FormButton
                   buttonType='outline'
@@ -149,5 +157,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     margin: 25
+  },
+  checkBoxContainer: {
+    backgroundColor: '#fff',
+    borderColor: '#fff'
   }
 })
