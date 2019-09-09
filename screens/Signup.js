@@ -7,6 +7,7 @@ import * as Yup from 'yup'
 import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
+import { withFirebaseHOC } from '../config/Firebase'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -20,14 +21,14 @@ const validationSchema = Yup.object().shape({
   password: Yup.string()
     .label('Password')
     .required()
-    .min(4, 'Password must have more than 4 characters '),
+    .min(6, 'Password should be at least 6 characters '),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Confirm Password must matched Password')
     .required('Confirm Password is required'),
   check: Yup.boolean().oneOf([true], 'Please check the agreement')
 })
 
-export default class Signup extends Component {
+class Signup extends Component {
   state = {
     passwordVisibility: true,
     confirmPasswordVisibility: true,
@@ -36,14 +37,6 @@ export default class Signup extends Component {
   }
 
   goToLogin = () => this.props.navigation.navigate('Login')
-
-  handleSubmit = values => {
-    if (values.email.length > 0 && values.password.length > 0) {
-      setTimeout(() => {
-        this.props.navigation.navigate('App')
-      }, 3000)
-    }
-  }
 
   handlePasswordVisibility = () => {
     this.setState(prevState => ({
@@ -59,6 +52,29 @@ export default class Signup extends Component {
         prevState.confirmPasswordIcon === 'ios-eye' ? 'ios-eye-off' : 'ios-eye',
       confirmPasswordVisibility: !prevState.confirmPasswordVisibility
     }))
+  }
+
+  handleOnSignup = async (values, actions) => {
+    const { name, email, password } = values
+
+    try {
+      const response = await this.props.firebase.signupWithEmail(
+        email,
+        password
+      )
+
+      if (response.user.uid) {
+        const { uid } = response.user
+        const userData = { email, name, uid }
+        await this.props.firebase.createNewUser(userData)
+        this.props.navigation.navigate('App')
+      }
+    } catch (error) {
+      // console.error(error)
+      actions.setFieldError('general', error.message)
+    } finally {
+      actions.setSubmitting(false)
+    }
   }
 
   render() {
@@ -78,8 +94,8 @@ export default class Signup extends Component {
             confirmPassword: '',
             check: false
           }}
-          onSubmit={values => {
-            this.handleSubmit(values)
+          onSubmit={(values, actions) => {
+            this.handleOnSignup(values, actions)
           }}
           validationSchema={validationSchema}>
           {({
@@ -174,6 +190,7 @@ export default class Signup extends Component {
                   loading={isSubmitting}
                 />
               </View>
+              <ErrorMessage errorValue={errors.general} />
             </Fragment>
           )}
         </Formik>
@@ -208,3 +225,5 @@ const styles = StyleSheet.create({
     borderColor: '#fff'
   }
 })
+
+export default withFirebaseHOC(Signup)

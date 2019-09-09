@@ -9,6 +9,7 @@ import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
 import AppLogo from '../components/AppLogo'
+import { withFirebaseHOC } from '../config/Firebase'
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -18,10 +19,10 @@ const validationSchema = Yup.object().shape({
   password: Yup.string()
     .label('Password')
     .required()
-    .min(4, 'Password must have more than 4 characters ')
+    .min(6, 'Password must have at least 6 characters ')
 })
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     passwordVisibility: true,
     rightIcon: 'ios-eye'
@@ -29,19 +30,26 @@ export default class Login extends Component {
 
   goToSignup = () => this.props.navigation.navigate('Signup')
 
-  handleSubmit = values => {
-    if (values.email.length > 0 && values.password.length > 0) {
-      setTimeout(() => {
-        this.props.navigation.navigate('App')
-      }, 3000)
-    }
-  }
-
   handlePasswordVisibility = () => {
     this.setState(prevState => ({
       rightIcon: prevState.rightIcon === 'ios-eye' ? 'ios-eye-off' : 'ios-eye',
       passwordVisibility: !prevState.passwordVisibility
     }))
+  }
+
+  handleOnLogin = async (values, actions) => {
+    const { email, password } = values
+    try {
+      const response = await this.props.firebase.loginWithEmail(email, password)
+
+      if (response.user) {
+        this.props.navigation.navigate('App')
+      }
+    } catch (error) {
+      actions.setFieldError('general', error.message)
+    } finally {
+      actions.setSubmitting(false)
+    }
   }
 
   render() {
@@ -53,8 +61,8 @@ export default class Login extends Component {
         </HideWithKeyboard>
         <Formik
           initialValues={{ email: '', password: '' }}
-          onSubmit={values => {
-            this.handleSubmit(values)
+          onSubmit={(values, actions) => {
+            this.handleOnLogin(values, actions)
           }}
           validationSchema={validationSchema}>
           {({
@@ -105,6 +113,7 @@ export default class Login extends Component {
                   loading={isSubmitting}
                 />
               </View>
+              <ErrorMessage errorValue={errors.general} />
             </Fragment>
           )}
         </Formik>
@@ -135,3 +144,5 @@ const styles = StyleSheet.create({
     margin: 25
   }
 })
+
+export default withFirebaseHOC(Login)
