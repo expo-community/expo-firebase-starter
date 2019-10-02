@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { StyleSheet, SafeAreaView, View, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, SafeAreaView, View, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { Button, CheckBox } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons'
 import { Formik } from 'formik'
@@ -85,14 +85,13 @@ class Signup extends Component {
       confirmPasswordIcon
     } = this.state
     return (
-
-
       <KeyboardAvoidingView
         style={styles.container}
         enabled
-        behavior='position'
+        behavior='padding'
+
       >
-        <SafeAreaView>
+        <ScrollView>
           <Formik
             initialValues={{
               name: '',
@@ -117,7 +116,6 @@ class Signup extends Component {
               setFieldValue
             }) => (
                 <Fragment>
-
                   <FormInput
                     name='name'
                     value={values.name}
@@ -199,6 +197,7 @@ class Signup extends Component {
                     />
                   </View>
                   <ErrorMessage errorValue={errors.general} />
+
                 </Fragment>
               )}
           </Formik>
@@ -210,11 +209,8 @@ class Signup extends Component {
             }}
             type='clear'
           />
-        </SafeAreaView>
-
+        </ScrollView>
       </KeyboardAvoidingView>
-
-
     )
   }
 }
