@@ -20,7 +20,9 @@ const Firebase = {
   checkUserAuth: user => {
     return firebase.auth().onAuthStateChanged(user)
   },
-
+  passwordReset: email => {
+    return firebase.auth().sendPasswordResetEmail(email)
+  },
   // firestore
   createNewUser: userData => {
     return firebase
