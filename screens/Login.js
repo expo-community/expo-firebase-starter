@@ -29,6 +29,7 @@ class Login extends Component {
   }
 
   goToSignup = () => this.props.navigation.navigate('Signup')
+  goToForgotPassword = () => this.props.navigation.navigate('ForgotPassword')
 
   handlePasswordVisibility = () => {
     this.setState(prevState => ({
@@ -122,6 +123,14 @@ class Login extends Component {
           onPress={this.goToSignup}
           titleStyle={{
             color: '#F57C00'
+          }}
+          type='clear'
+        />
+        <Button
+          title='Forgot Password?'
+          onPress={this.goToForgotPassword}
+          titleStyle={{
+            color: '#039BE5'
           }}
           type='clear'
         />
