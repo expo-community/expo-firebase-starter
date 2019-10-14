@@ -12,6 +12,7 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 - show/hide Password Field's visibility 👁
 - uses Context API & checks user's auth state
 - based on Expo SDK `35.x.x`
+- implement Password Reset Screen
 
 ## Installation
 
@@ -41,6 +42,7 @@ Main screens:
 
 - Login
 - Signup
+- Forgot password
 
 ![Successfull Signup](https://i.imgur.com/r40CEuW.gif)
 
@@ -49,6 +51,8 @@ Main screens:
 ![Server Errors](https://i.imgur.com/DrqOjct.gif)
 
 ![Successful Login](https://i.imgur.com/toxtKit.gif)
+
+![Forgot Password](https://i.imgur.com/fZ91yar.png)
 
 ## ⚠️⚠️⚠️
 
