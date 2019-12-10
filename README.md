@@ -2,6 +2,7 @@
 
 Is a quicker way to start with Expo + Firebase projects. It includes:
 
+- based on Expo SDK `36.x.x`
 - navigation using `react-navigation` 4.x.x
 - Firebase as backend for email auth
 - uses Firestore to store user data
@@ -11,7 +12,6 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 - uses `react-native-elements` for UI elements
 - show/hide Password Field's visibility 👁
 - uses Context API & checks user's auth state
-- based on Expo SDK `36.x.x`
 - implement Password Reset Screen
 
 ## Installation
