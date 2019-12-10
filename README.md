@@ -26,14 +26,14 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 // Replace all Xs with real Firebase API keys
 
 export default {
-  apiKey: 'XXXX',
-  authDomain: 'XXXX',
-  databaseURL: 'XXXX',
-  projectId: 'XXXX',
-  storageBucket: 'XXXX',
-  messagingSenderId: 'XXXX',
-  appId: 'XXXX'
-}
+  apiKey: "XXXX",
+  authDomain: "XXXX",
+  databaseURL: "XXXX",
+  projectId: "XXXX",
+  storageBucket: "XXXX",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
+};
 ```
 
 ## Screens
@@ -65,5 +65,9 @@ Expo uses Firebase Web SDK and does not support all Firebase services such as ph
 😃 If any of the code used in this you found useful to your project:
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A611K61)
+
+**OR**
+
+💌 You can subscribe to my weekly newsletter which is on Web Development and React Native. I share my latest blog posts and important ones from the React Native community. Here is the [link](tinyletter.com/amanhimself).
 
 **Happy Coding!** 🎉🎉
