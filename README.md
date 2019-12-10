@@ -68,6 +68,6 @@ Expo uses Firebase Web SDK and does not support all Firebase services such as ph
 
 **OR**
 
-💌 You can subscribe to my weekly newsletter which is on Web Development and React Native. I share my latest blog posts and important ones from the React Native community. Here is the [link](tinyletter.com/amanhimself).
+💌 You can subscribe to my weekly newsletter which is on Web Development and React Native. I share my latest blog posts and important ones from the React Native community. **Here is the [link](https://tinyletter.com/amanhimself)**.
 
 **Happy Coding!** 🎉🎉
