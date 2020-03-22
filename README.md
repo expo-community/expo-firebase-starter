@@ -62,7 +62,7 @@ Expo Gatsby
 ├── screens
 │   └── ForgotPassword.js ➡️ Forgot Password screen component
 │   └── Home.js ➡️ Protected route/screen component
-│   └── Initial.js ➡️ Load initial assets component, and check if the user is already logged in
+│   └── Initial.js ➡️ Load initial assets component, and checks if the user is already logged in
 │   └── Login.js ➡️ Login screen component
 │   └── Signup.js ➡️ Register screen component
 ├── App.js ➡️ Entry Point for Mobile apps
