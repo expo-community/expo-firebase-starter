@@ -27,7 +27,7 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 - Clone this repo
 - to install dependencies: `npm install` or `yarn install`
 - rename the file `example.firebaseConfig.js` to `firebaseConfig.js`
-- and make sure to add your own Firebase config in this file:
+- and make sure to add your own Firebase config in this file as shown below.
 
 ```js
 // Rename this file to "firebaeConfig.js" before use
