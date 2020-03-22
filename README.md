@@ -1,4 +1,4 @@
-# expo-firebase 🔥
+# expo-firebase-starter 🔥
 
 <p>
   <!-- iOS -->
@@ -47,7 +47,7 @@ export default {
 ## File Strucutre
 
 ```shell
-Expo Gatsby
+Expo Firebase Starter
 ├── assets ➡️ All static assets
 ├── components ➡️ All re-suable UI components for form screens
 ├── config
