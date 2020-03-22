@@ -1,5 +1,12 @@
 # expo-firebase 🔥
 
+<p>
+  <!-- iOS -->
+  <img alt="Supports Expo iOS" longdesc="Supports Expo iOS" src="https://img.shields.io/badge/iOS-4630EB.svg?style=flat-square&logo=APPLE&labelColor=999999&logoColor=fff" />
+  <!-- Android -->
+  <img alt="Supports Expo Android" longdesc="Supports Expo Android" src="https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff" />  
+</p>
+
 Is a quicker way to start with Expo + Firebase projects. It includes:
 
 - based on Expo SDK `36.x.x`
@@ -37,6 +44,32 @@ export default {
 };
 ```
 
+## File Strucutre
+
+````shell
+Expo Gatsby
+├── assets ➡️ All static assets
+├── components ➡️ All re-suable UI components for form screens
+├── config
+│   └── firebase ➡️ Firebase related config
+│       └── context.js ➡️ Firebase high order component consumed in screen components
+│       └── firebaseConfig.js ➡️ Firebase API keys
+│       └── firebase.js ➡️ Firebase authentication helper methods
+├── navigation
+│   └── AppNavigation.js ➡️ Protected routes such as Home screen
+│   └── AuthNavigation.js ➡️ Routes such as Login screen, when the user is not authenticated
+│   └── index.js ➡️ Switch between different stack navigators including "Initial" screen
+├── screens
+│   └── ForgotPassword.js ➡️ Forgot Password screen component
+│   └── Home.js ➡️ Protected route/screen component
+│   └── Initial.js ➡️ Load initial assets component, and check if the user is already logged in
+│   └── Login.js ➡️ Login screen component
+│   └── Signup.js ➡️ Register screen component
+├── App.js ➡️ Entry Point for Mobile apps
+├── app.json ➡️ Expo config file
+└── babel.config.js ➡️ Babel config (should be using `babel-preset-expo`)\```
+````
+
 ## Screens
 
 Main screens:
@@ -63,12 +96,6 @@ Expo uses Firebase Web SDK and does not support all Firebase services such as ph
 
 ---
 
-😃 If any of the code used in this you found useful to your project:
-
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A611K61)
-
-**OR**
-
-💌 You can subscribe to my weekly newsletter which is on Web Development and React Native. I share my latest blog posts and important ones from the React Native community. **Here is the [link](https://tinyletter.com/amanhimself)**.
+<strong>Built by [@amanhimself](https://twitter.com/amanhimself)</strong>
 
 **Happy Coding!** 🎉🎉
