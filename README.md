@@ -13,6 +13,7 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 - show/hide Password Field's visibility 👁
 - uses Context API & checks user's auth state
 - implement Password Reset Screen
+- all components are now functional components and use [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 
 ## Installation
 
