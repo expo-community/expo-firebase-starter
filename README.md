@@ -46,7 +46,7 @@ export default {
 
 ## File Strucutre
 
-````shell
+```shell
 Expo Gatsby
 ├── assets ➡️ All static assets
 ├── components ➡️ All re-suable UI components for form screens
@@ -67,8 +67,8 @@ Expo Gatsby
 │   └── Signup.js ➡️ Register screen component
 ├── App.js ➡️ Entry Point for Mobile apps
 ├── app.json ➡️ Expo config file
-└── babel.config.js ➡️ Babel config (should be using `babel-preset-expo`)\```
-````
+└── babel.config.js ➡️ Babel config (should be using `babel-preset-expo`)
+```
 
 ## Screens
 
