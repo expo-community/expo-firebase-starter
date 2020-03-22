@@ -1,7 +1,7 @@
-import { createSwitchNavigator, createAppContainer } from 'react-navigation'
-import Initial from '../screens/Initial'
-import AuthNavigation from './AuthNavigation'
-import AppNavigation from './AppNavigation'
+import { createSwitchNavigator, createAppContainer } from "react-navigation";
+import Initial from "../screens/Initial";
+import AuthNavigation from "./AuthNavigation";
+import AppNavigation from "./AppNavigation";
 
 const SwitchNavigator = createSwitchNavigator(
   {
@@ -10,10 +10,10 @@ const SwitchNavigator = createSwitchNavigator(
     App: AppNavigation
   },
   {
-    initialRouteName: 'Initial'
+    initialRouteName: "Initial"
   }
-)
+);
 
-const AppContainer = createAppContainer(SwitchNavigator)
+const AppContainer = createAppContainer(SwitchNavigator);
 
-export default AppContainer
+export default AppContainer;
