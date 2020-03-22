@@ -1,7 +1,7 @@
-import React from 'react'
-import { Input } from 'react-native-elements'
-import { StyleSheet, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+import React from "react";
+import { Input } from "react-native-elements";
+import { StyleSheet, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const FormInput = ({
   iconName,
@@ -17,13 +17,13 @@ const FormInput = ({
       {...rest}
       leftIcon={<Ionicons name={iconName} size={28} color={iconColor} />}
       leftIconContainerStyle={styles.iconStyle}
-      placeholderTextColor='grey'
+      placeholderTextColor="grey"
       name={name}
       placeholder={placeholder}
       style={styles.input}
     />
   </View>
-)
+);
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
   iconStyle: {
     marginRight: 10
   }
-})
+});
 
-export default FormInput
+export default FormInput;
