@@ -3,7 +3,6 @@
     "name": "Expo Firebase Starter",
     "slug": "expo-firebase",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
