@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button, View } from 'react-native';
 import * as Yup from 'yup';
 
 import Colors from '../utils/colors';
@@ -62,6 +62,13 @@ export default function LoginScreen() {
         />
         <FormButton title={'Login'} />
       </Form>
+      <View style={styles.footerButtonContainer}>
+        <Button
+          title="Forgot Password?"
+          onPress={() => alert('Forgot Password Screen')}
+          color={Colors.white}
+        />
+      </View>
     </SafeView>
   );
 }
@@ -70,5 +77,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 15,
     backgroundColor: Colors.mediumGrey
+  },
+  footerButtonContainer: {
+    marginVertical: 15
   }
 });
