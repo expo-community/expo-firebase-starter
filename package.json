@@ -30,6 +30,8 @@
     "yup": "0.27.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/runtime": "^7.9.0",
     "babel-preset-expo": "^8.1.0"
   },
   "private": true
