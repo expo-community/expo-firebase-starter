@@ -4,10 +4,7 @@ import { View, StyleSheet, Text, Image } from 'react-native';
 import AppButton from '../components/AppButton';
 import Colors from '../utils/colors';
 
-// TODO: After this screen is in the new navigator
-// delete AppLogo component
-
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -15,11 +12,11 @@ export default function WelcomeScreen() {
         <Text style={styles.subtitle}>Expo Firebase Starter</Text>
       </View>
       <View style={styles.buttonContainer}>
-        <AppButton title="Login" onPress={() => alert('Press login')} />
+        <AppButton title="Login" onPress={() => navigation.navigate('Login')} />
         <AppButton
           title="Register"
           color="secondary"
-          onPress={() => alert('Press Register')}
+          onPress={() => navigation.navigate('Register')}
         />
       </View>
     </View>
