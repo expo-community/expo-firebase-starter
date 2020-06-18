@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Button, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import * as Yup from 'yup';
 
 import Colors from '../utils/colors';
@@ -8,6 +8,8 @@ import Form from '../components/Forms/Form';
 import FormField from '../components/Forms/FormField';
 import FormButton from '../components/Forms/FormButton';
 import IconButton from '../components/IconButton';
+import { loginWithEmail } from '../components/Firebase/firebase';
+import FormErrorMessage from '../components/Forms/FormErrorMessage';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -23,6 +25,7 @@ const validationSchema = Yup.object().shape({
 export default function LoginScreen({ navigation }) {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
+  const [loginError, setLoginError] = useState('');
 
   function handlePasswordVisibility() {
     if (rightIcon === 'eye') {
@@ -34,12 +37,22 @@ export default function LoginScreen({ navigation }) {
     }
   }
 
+  async function handleOnLogin(values) {
+    const { email, password } = values;
+
+    try {
+      await loginWithEmail(email, password);
+    } catch (error) {
+      setLoginError(error.message);
+    }
+  }
+
   return (
     <SafeView style={styles.container}>
       <Form
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
-        onSubmit={values => console.log(values)}
+        onSubmit={values => handleOnLogin(values)}
       >
         <FormField
           name="email"
@@ -62,13 +75,12 @@ export default function LoginScreen({ navigation }) {
           handlePasswordVisibility={handlePasswordVisibility}
         />
         <FormButton title={'Login'} />
+        {<FormErrorMessage error={loginError} visible={true} />}
       </Form>
       <View style={styles.footerButtonContainer}>
-        <Button
-          title="Forgot Password?"
-          onPress={() => navigation.navigate('ForgotPassword')}
-          color={Colors.white}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+          <Text style={styles.forgotPasswordButtonText}>Forgot Password?</Text>
+        </TouchableOpacity>
       </View>
       <IconButton
         style={styles.backButton}
@@ -87,7 +99,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.mediumGrey
   },
   footerButtonContainer: {
-    marginVertical: 15
+    marginVertical: 15,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  forgotPasswordButtonText: {
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: '600'
   },
   backButton: {
     justifyContent: 'center',

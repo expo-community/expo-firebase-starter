@@ -8,6 +8,8 @@ import Form from '../components/Forms/Form';
 import FormField from '../components/Forms/FormField';
 import FormButton from '../components/Forms/FormButton';
 import IconButton from '../components/IconButton';
+import FormErrorMessage from '../components/Forms/FormErrorMessage';
+import { registerWithEmail } from '../components/Firebase/firebase';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -34,6 +36,7 @@ export default function RegisterScreen({ navigation }) {
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(
     true
   );
+  const [registerError, setRegisterError] = useState('');
 
   function handlePasswordVisibility() {
     if (rightIcon === 'eye') {
@@ -55,6 +58,15 @@ export default function RegisterScreen({ navigation }) {
     }
   }
 
+  async function handleOnSignUp(values, actions) {
+    const { email, password } = values;
+    try {
+      await registerWithEmail(email, password);
+    } catch (error) {
+      setRegisterError(error.message);
+    }
+  }
+
   return (
     <SafeView style={styles.container}>
       <Form
@@ -65,7 +77,7 @@ export default function RegisterScreen({ navigation }) {
           confirmPassword: ''
         }}
         validationSchema={validationSchema}
-        onSubmit={values => console.log(values)}
+        onSubmit={values => handleOnSignUp(values)}
       >
         <FormField
           name="name"
@@ -104,6 +116,7 @@ export default function RegisterScreen({ navigation }) {
           handlePasswordVisibility={handleConfirmPasswordVisibility}
         />
         <FormButton title={'Register'} />
+        {<FormErrorMessage error={registerError} visible={true} />}
       </Form>
       <IconButton
         style={styles.backButton}
