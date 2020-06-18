@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import * as Yup from 'yup';
 
@@ -8,6 +8,8 @@ import Form from '../components/Forms/Form';
 import FormField from '../components/Forms/FormField';
 import FormButton from '../components/Forms/FormButton';
 import IconButton from '../components/IconButton';
+import { passwordReset } from '../components/Firebase/firebase';
+import FormErrorMessage from '../components/Forms/FormErrorMessage';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -17,12 +19,25 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function ForgotPasswordScreen({ navigation }) {
+  const [customError, setCustomError] = useState('');
+
+  async function handlePasswordReset(values) {
+    const { email } = values;
+
+    try {
+      await passwordReset(email);
+      navigation.navigate('Welcome');
+    } catch (error) {
+      setCustomError(error.message);
+    }
+  }
+
   return (
     <SafeView style={styles.container}>
       <Form
         initialValues={{ email: '' }}
         validationSchema={validationSchema}
-        onSubmit={values => console.log(values)}
+        onSubmit={values => handlePasswordReset(values)}
       >
         <FormField
           name="email"
@@ -34,6 +49,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           autoFocus={true}
         />
         <FormButton title="Forgot Password" />
+        {<FormErrorMessage error={customError} visible={true} />}
       </Form>
       <IconButton
         style={styles.backButton}
