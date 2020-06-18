@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 const ErrorMessage = ({ errorValue }) => (
   <View style={styles.container}>
@@ -9,10 +9,10 @@ const ErrorMessage = ({ errorValue }) => (
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 25
+    marginLeft: 80
   },
   errorText: {
-    color: "red"
+    color: 'red'
   }
 });
 
