@@ -7,6 +7,7 @@ import SafeView from '../components/SafeView';
 import Form from '../components/Forms/Form';
 import FormField from '../components/Forms/FormField';
 import FormButton from '../components/Forms/FormButton';
+import IconButton from '../components/IconButton';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -19,7 +20,7 @@ const validationSchema = Yup.object().shape({
     .label('Password')
 });
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
 
@@ -65,10 +66,17 @@ export default function LoginScreen() {
       <View style={styles.footerButtonContainer}>
         <Button
           title="Forgot Password?"
-          onPress={() => alert('Forgot Password Screen')}
+          onPress={() => navigation.navigate('ForgotPassword')}
           color={Colors.white}
         />
       </View>
+      <IconButton
+        style={styles.backButton}
+        iconName="keyboard-backspace"
+        color="#fff"
+        size={30}
+        onPress={() => navigation.goBack()}
+      />
     </SafeView>
   );
 }
@@ -80,5 +88,9 @@ const styles = StyleSheet.create({
   },
   footerButtonContainer: {
     marginVertical: 15
+  },
+  backButton: {
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
