@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 
+import useStatusBar from '../hooks/useStatusBar';
 import { logout } from '../components/Firebase/firebase';
 
 export default function HomeScreen() {
+  useStatusBar('dark-content');
   async function handleSignOut() {
     try {
       await logout();

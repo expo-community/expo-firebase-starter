@@ -10,6 +10,7 @@ import FormButton from '../components/Forms/FormButton';
 import IconButton from '../components/IconButton';
 import { loginWithEmail } from '../components/Firebase/firebase';
 import FormErrorMessage from '../components/Forms/FormErrorMessage';
+import useStatusBar from '../hooks/useStatusBar';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -23,6 +24,8 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function LoginScreen({ navigation }) {
+  useStatusBar('light-content');
+
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
   const [loginError, setLoginError] = useState('');

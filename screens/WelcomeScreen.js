@@ -3,8 +3,11 @@ import { View, StyleSheet, Text, Image } from 'react-native';
 
 import AppButton from '../components/AppButton';
 import Colors from '../utils/colors';
+import useStatusBar from '../hooks/useStatusBar';
 
 export default function WelcomeScreen({ navigation }) {
+  useStatusBar('light-content');
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>

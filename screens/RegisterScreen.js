@@ -10,6 +10,7 @@ import FormButton from '../components/Forms/FormButton';
 import IconButton from '../components/IconButton';
 import FormErrorMessage from '../components/Forms/FormErrorMessage';
 import { registerWithEmail } from '../components/Firebase/firebase';
+import useStatusBar from '../hooks/useStatusBar';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -30,6 +31,8 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function RegisterScreen({ navigation }) {
+  useStatusBar('light-content');
+
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState('eye');

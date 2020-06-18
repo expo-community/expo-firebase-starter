@@ -10,6 +10,7 @@ import FormButton from '../components/Forms/FormButton';
 import IconButton from '../components/IconButton';
 import { passwordReset } from '../components/Firebase/firebase';
 import FormErrorMessage from '../components/Forms/FormErrorMessage';
+import useStatusBar from '../hooks/useStatusBar';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -19,6 +20,8 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function ForgotPasswordScreen({ navigation }) {
+  useStatusBar('light-content');
+
   const [customError, setCustomError] = useState('');
 
   async function handlePasswordReset(values) {
