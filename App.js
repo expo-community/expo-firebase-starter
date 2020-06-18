@@ -1,11 +1,18 @@
-import React from "react";
-import AppContainer from "./navigation";
-import Firebase, { FirebaseProvider } from "./config/Firebase";
+import React from 'react';
+
+// export default function App() {
+//   return (
+//     <FirebaseProvider value={Firebase}>
+//       <AppContainer />
+//     </FirebaseProvider>
+//   );
+// }
+
+// TODO: REMOVE THIS and uncomment above
+// WARNING: ONLY FOR MANUAL TESTING
+
+import Providers from './navigation';
 
 export default function App() {
-  return (
-    <FirebaseProvider value={Firebase}>
-      <AppContainer />
-    </FirebaseProvider>
-  );
+  return <Providers />;
 }
