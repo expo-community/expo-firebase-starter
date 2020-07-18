@@ -91,15 +91,13 @@ Main screens:
 - Signup
 - Forgot password
 
-![Successfull Signup](https://i.imgur.com/r40CEuW.gif)
+![Initial Welcome Screen](https://i.imgur.com/KJAzftx.gif)
 
-![Error message](https://i.imgur.com/XXK3D7N.gif)
+![Successful Signup](https://i.imgur.com/Ih72jol.gif)
 
-![Server Errors](https://i.imgur.com/DrqOjct.gif)
+![Successful Login](https://i.imgur.com/Xp0tiI1.gif)
 
-![Successful Login](https://i.imgur.com/toxtKit.gif)
-
-![Forgot Password](https://i.imgur.com/fZ91yar.png)
+![Forgot Password](https://i.imgur.com/HDvQMfp.png)
 
 ## ⚠️⚠️⚠️
 
