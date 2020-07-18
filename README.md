@@ -77,7 +77,7 @@ Expo Firebase Starter
 │   └── RegisterScreen.js ➡️ Register screen component
 │   └── WelcomeScreen.js ➡️ Initial screen component
 ├── utils
-│   └── colors.js ➡️ Default, reusable colors for the app
+│   └── colors.js ➡️ Default, reusable values across the app
 ├── App.js ➡️ Entry Point for Mobile apps
 ├── app.json ➡️ Expo config file
 └── babel.config.js ➡️ Babel config (should be using `babel-preset-expo`)
