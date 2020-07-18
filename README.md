@@ -9,14 +9,13 @@
 
 Is a quicker way to start with Expo + Firebase projects. It includes:
 
-- based on Expo SDK `37.x.x`
-- navigation using `react-navigation` 4.x.x
+- based on Expo SDK `38.x.x`
+- navigation using `react-navigation` 5.x.x
 - Firebase as backend for email auth
-- uses Firestore to store user data
+- custom and reusable form components
 - handles different field types in forms
 - handles server errors using Formik
 - Login/Signup form built using Formik & yup
-- uses `react-native-elements` for UI elements
 - show/hide Password Field's visibility 👁
 - uses Context API & checks user's auth state
 - implement Password Reset Screen
@@ -50,21 +49,35 @@ export default {
 Expo Firebase Starter
 ├── assets ➡️ All static assets
 ├── components ➡️ All re-suable UI components for form screens
-├── config
-│   └── firebase ➡️ Firebase related config
-│       └── context.js ➡️ Firebase high order component consumed in screen components
+│   └── Firebase ➡️ Firebase related config directory
 │       └── firebaseConfig.js ➡️ Firebase API keys
-│       └── firebase.js ➡️ Firebase authentication helper methods
+│       └── firebase.js ➡️ Firebase app initialization & authentication helper methods
+│   └── Forms ➡️ Reusable form components
+│       └── Form.js ➡️ Reusable Form wrapper to apply Formik
+│       └── FormButton.js ➡️ Reusable button component that handles form submit using Formik context hook
+│       └── FormErrorMessage.js ➡️ Reusable component to display server errors from Firebase
+│       └── FormField.js ➡️ Reusable TextInput component
+│   └── AppButton.js ➡️ Button component
+│   └── AppTextInput.js ➡️ TextInput component
+│   └── IconButton.js ➡️ Button with icon only component
+│   └── SafeView.js ➡️ SafeAreaView wrapper component
+│   └── Spinner.js ➡️ Loading indicator component
+├── hooks ➡️ All custom hook components
+│   └── useStatusBar.js ➡️ A custom hook based on @react-navigation library to animate the status bar style changes
 ├── navigation
-│   └── AppNavigation.js ➡️ Protected routes such as Home screen
-│   └── AuthNavigation.js ➡️ Routes such as Login screen, when the user is not authenticated
-│   └── index.js ➡️ Switch between different stack navigators including "Initial" screen
+│   └── AppStack.js ➡️ Protected routes such as Home screen
+│   └── AuthStack.js ➡️ Routes such as Login screen, when the user is not authenticated
+│   └── AuthUserProvider.js ➡️ An Auth User Context component that shares Firebase user object when logged-in
+│   └── navigationTheme.js ➡️ A default theme for navigation components
+│   └── Routes.js ➡️ Switch between Auth and App stacks based on Firebase user logged-in state
 ├── screens
 │   └── ForgotPassword.js ➡️ Forgot Password screen component
-│   └── Home.js ➡️ Protected route/screen component
-│   └── Initial.js ➡️ Load initial assets component, and checks if the user is already logged in
-│   └── Login.js ➡️ Login screen component
-│   └── Signup.js ➡️ Register screen component
+│   └── HomeScreen.js ➡️ Protected route/screen component
+│   └── LoginScreen.js ➡️ Login screen component
+│   └── RegisterScreen.js ➡️ Register screen component
+│   └── WelcomeScreen.js ➡️ Initial screen component
+├── utils
+│   └── colors.js ➡️ Default, reusable colors for the app
 ├── App.js ➡️ Entry Point for Mobile apps
 ├── app.json ➡️ Expo config file
 └── babel.config.js ➡️ Babel config (should be using `babel-preset-expo`)
