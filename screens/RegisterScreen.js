@@ -17,7 +17,7 @@ const validationSchema = Yup.object().shape({
     .required()
     .label('Name'),
   email: Yup.string()
-    .required('Please enter a registered email')
+    .required('Please enter a valid email')
     .email()
     .label('Email'),
   password: Yup.string()
@@ -25,9 +25,8 @@ const validationSchema = Yup.object().shape({
     .min(6, 'Password must have at least 6 characters')
     .label('Password'),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Confirm Password must matched Password')
-    .required('Confirm Password is required'),
-  check: Yup.boolean().oneOf([true], 'Please check the agreement')
+    .oneOf([Yup.ref('password')], 'Confirm Password must match Password')
+    .required('Confirm Password is required')
 });
 
 export default function RegisterScreen({ navigation }) {
