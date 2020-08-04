@@ -29,7 +29,7 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 - and make sure to add your own Firebase config in this file as shown below.
 
 ```js
-// Rename this file to "firebaeConfig.js" before use
+// Rename this file to "firebaseConfig.js" before use
 // Replace all Xs with real Firebase API keys
 
 export default {
