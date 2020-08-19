@@ -52,13 +52,13 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   input: {
+    flex: 1,
     width: '100%',
     fontSize: 18,
     color: Colors.black
   },
   rightIconStyles: {
-    position: 'absolute',
-    right: 30,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    marginLeft: 10
   }
 });
