@@ -9,7 +9,7 @@
 
 Is a quicker way to start with Expo + Firebase projects. It includes:
 
-- based on Expo SDK `38.x.x`
+- based on Expo SDK `39.x.x`
 - navigation using `react-navigation` 5.x.x
 - Firebase as backend for email auth
 - custom and reusable form components
@@ -24,11 +24,14 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 ## Installation
 
 1. Create a new project using the firebase starter template.
+
 ```bash
 $ npx create-react-native-app --template https://github.com/expo-community/expo-firebase-starter
 ```
+
 2. Rename the file `example.firebaseConfig.js` to `firebaseConfig.js`
 3. Update `firebaseConfig.js` with your own configuration, e.g.:
+
 ```js
 // Rename this file to "firebaseConfig.js" before use
 // Replace all Xs with real Firebase API keys
