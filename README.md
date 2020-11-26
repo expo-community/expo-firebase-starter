@@ -47,6 +47,10 @@ export default {
 };
 ```
 
+4. Start the project:
+  - `yarn ios` -- open on iOS
+  - `yarn android` -- open on Android
+
 ## File Structure
 
 ```shell
