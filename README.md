@@ -47,7 +47,7 @@ export default {
 };
 ```
 
-## File Strucutre
+## File Structure
 
 ```shell
 Expo Firebase Starter
