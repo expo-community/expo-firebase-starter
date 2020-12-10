@@ -9,7 +9,7 @@
 
 Is a quicker way to start with Expo + Firebase projects. It includes:
 
-- based on Expo SDK `39.x.x`
+- based on Expo SDK `40.x.x`
 - navigation using `react-navigation` 5.x.x
 - Firebase as backend for email auth
 - custom and reusable form components
