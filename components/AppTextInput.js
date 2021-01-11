@@ -8,9 +8,16 @@ export default function AppTextInput({
   leftIcon,
   width = '100%',
   rightIcon,
-  handlePasswordVisibility,
+  secureTextEntry = false,
   ...otherProps
 }) {
+  const [passwordVisibility, setPasswordVisibility] = useState(secureTextEntry);
+  const [passwordVisibilityIcon, setPasswordVisibilityIcon] = useState(rightIcon);
+  
+  const handlePasswordVisibility = () => {
+    passwordVisibilityIcon === "eye-off" ? setPasswordVisibilityIcon("eye") : setPasswordVisibilityIcon("eye-off");
+    passwordVisibility ? setPasswordVisibility(false) : setPasswordVisibility(true);
+  };
   return (
     <View style={[styles.container, { width }]}>
       {leftIcon && (
@@ -24,12 +31,13 @@ export default function AppTextInput({
       <TextInput
         style={styles.input}
         placeholderTextColor={Colors.mediumGrey}
+        secureTextEntry={passwordVisibility}
         {...otherProps}
       />
       {rightIcon && (
         <TouchableOpacity onPress={handlePasswordVisibility}>
           <MaterialCommunityIcons
-            name={rightIcon}
+            name={passwordVisibilityIcon}
             size={20}
             color={Colors.mediumGrey}
             style={styles.rightIconStyles}
