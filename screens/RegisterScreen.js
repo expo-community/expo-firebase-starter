@@ -32,33 +32,7 @@ const validationSchema = Yup.object().shape({
 export default function RegisterScreen({ navigation }) {
   useStatusBar('light-content');
 
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [rightIcon, setRightIcon] = useState('eye');
-  const [confirmPasswordIcon, setConfirmPasswordIcon] = useState('eye');
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(
-    true
-  );
   const [registerError, setRegisterError] = useState('');
-
-  function handlePasswordVisibility() {
-    if (rightIcon === 'eye') {
-      setRightIcon('eye-off');
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === 'eye-off') {
-      setRightIcon('eye');
-      setPasswordVisibility(!passwordVisibility);
-    }
-  }
-
-  function handleConfirmPasswordVisibility() {
-    if (confirmPasswordIcon === 'eye') {
-      setConfirmPasswordIcon('eye-off');
-      setConfirmPasswordVisibility(!confirmPasswordVisibility);
-    } else if (confirmPasswordIcon === 'eye-off') {
-      setConfirmPasswordIcon('eye');
-      setConfirmPasswordVisibility(!confirmPasswordVisibility);
-    }
-  }
 
   async function handleOnSignUp(values, actions) {
     const { email, password } = values;
@@ -101,10 +75,9 @@ export default function RegisterScreen({ navigation }) {
           placeholder="Enter password"
           autoCapitalize="none"
           autoCorrect={false}
-          secureTextEntry={passwordVisibility}
           textContentType="password"
-          rightIcon={rightIcon}
-          handlePasswordVisibility={handlePasswordVisibility}
+          rightIcon="eye"
+          secureTextEntry
         />
         <FormField
           name="confirmPassword"
@@ -112,10 +85,9 @@ export default function RegisterScreen({ navigation }) {
           placeholder="Confirm password"
           autoCapitalize="none"
           autoCorrect={false}
-          secureTextEntry={confirmPasswordVisibility}
           textContentType="password"
-          rightIcon={confirmPasswordIcon}
-          handlePasswordVisibility={handleConfirmPasswordVisibility}
+          rightIcon="eye"
+          secureTextEntry
         />
         <FormButton title={'Register'} />
         {<FormErrorMessage error={registerError} visible={true} />}
@@ -136,7 +108,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: Colors.mediumGrey
   },
-  backButton: {
+  backButton: {  
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10
