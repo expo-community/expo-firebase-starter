@@ -9,7 +9,7 @@
 
 Is a quicker way to start with Expo + Firebase projects. It includes:
 
-- based on Expo SDK `40.x.x`
+- based on Expo SDK `42`
 - navigation using `react-navigation` 5.x.x
 - Firebase as backend for email auth
 - custom and reusable form components
@@ -48,8 +48,9 @@ export default {
 ```
 
 4. Start the project:
-  - `yarn ios` -- open on iOS
-  - `yarn android` -- open on Android
+
+- `yarn ios` -- open on iOS
+- `yarn android` -- open on Android
 
 ## File Structure
 
