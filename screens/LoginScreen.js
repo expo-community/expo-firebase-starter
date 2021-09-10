@@ -25,20 +25,7 @@ const validationSchema = Yup.object().shape({
 
 export default function LoginScreen({ navigation }) {
   useStatusBar('light-content');
-
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [rightIcon, setRightIcon] = useState('eye');
   const [loginError, setLoginError] = useState('');
-
-  function handlePasswordVisibility() {
-    if (rightIcon === 'eye') {
-      setRightIcon('eye-off');
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === 'eye-off') {
-      setRightIcon('eye');
-      setPasswordVisibility(!passwordVisibility);
-    }
-  }
 
   async function handleOnLogin(values) {
     const { email, password } = values;
@@ -72,10 +59,9 @@ export default function LoginScreen({ navigation }) {
           placeholder="Enter password"
           autoCapitalize="none"
           autoCorrect={false}
-          secureTextEntry={passwordVisibility}
           textContentType="password"
-          rightIcon={rightIcon}
-          handlePasswordVisibility={handlePasswordVisibility}
+          rightIcon="eye"
+          secureTextEntry
         />
         <FormButton title={'Login'} />
         {<FormErrorMessage error={loginError} visible={true} />}
