@@ -8,15 +8,15 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-community/masked-view": "0.1.10",
-    "@react-navigation/native": "5.5.1",
-    "@react-navigation/stack": "5.5.1",
+    "@react-native-masked-view/masked-view": "0.2.5",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/stack": "^6.0.11",
     "expo": "^43.0.0-beta.3",
     "expo-asset": "~8.4.1",
     "expo-constants": "~12.1.0",
     "expo-font": "~10.0.1",
     "firebase": "9.1.0",
-    "formik": "2.1.4",
+    "formik": "^2.2.9",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.2",
@@ -26,7 +26,7 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-web": "0.17.1",
-    "yup": "0.27.0"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
