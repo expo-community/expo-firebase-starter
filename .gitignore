@@ -39,6 +39,4 @@ Temporary Items
 .apdisk
 
 # Project related
-firebaseConfig.js
-config/firebase.config.js
 .env
