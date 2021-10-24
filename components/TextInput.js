@@ -4,8 +4,15 @@ import { TextInput as RNTextInput } from 'react-native';
 import { View } from './View';
 import { Icon } from './Icon';
 import { Colors } from '../config';
+import { Button } from './Button';
 
-export const TextInput = ({ width = '100%', leftIconName, ...otherProps }) => {
+export const TextInput = ({
+  width = '100%',
+  leftIconName,
+  rightIcon,
+  handlePasswordVisibility,
+  ...otherProps
+}) => {
   return (
     <View
       style={{
@@ -37,6 +44,16 @@ export const TextInput = ({ width = '100%', leftIconName, ...otherProps }) => {
         placeholderTextColor={Colors.mediumGray}
         {...otherProps}
       />
+      {rightIcon ? (
+        <Button onPress={handlePasswordVisibility}>
+          <Icon
+            name={rightIcon}
+            size={22}
+            color={Colors.mediumGray}
+            style={{ marginRight: 10 }}
+          />
+        </Button>
+      ) : null}
     </View>
   );
 };
