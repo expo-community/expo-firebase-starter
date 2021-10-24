@@ -6,8 +6,14 @@ import { Images, Colors } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 
 export const SignupScreen = ({ navigation }) => {
-  const { passwordVisibility, handlePasswordVisibility, rightIcon } =
-    useTogglePasswordVisibility();
+  const {
+    passwordVisibility,
+    handlePasswordVisibility,
+    rightIcon,
+    handleConfirmPasswordVisibility,
+    confirmPasswordIcon,
+    confirmPasswordVisibility
+  } = useTogglePasswordVisibility();
 
   return (
     <View isSafe style={styles.container}>
@@ -36,6 +42,17 @@ export const SignupScreen = ({ navigation }) => {
         textContentType='password'
         rightIcon={rightIcon}
         handlePasswordVisibility={handlePasswordVisibility}
+      />
+      <TextInput
+        name='confirmPassword'
+        leftIconName='lock'
+        placeholder='Enter password'
+        autoCapitalize='none'
+        autoCorrect={false}
+        secureTextEntry={confirmPasswordVisibility}
+        textContentType='password'
+        rightIcon={confirmPasswordIcon}
+        handlePasswordVisibility={handleConfirmPasswordVisibility}
       />
       {/* Signup button */}
       <Button style={styles.button}>
