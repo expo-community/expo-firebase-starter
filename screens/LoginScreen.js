@@ -43,7 +43,11 @@ export const LoginScreen = () => {
           <Text style={styles.buttonText}>Login</Text>
         </Button>
         {/* Button to navigate to SignupScreen to create a new account */}
-        <BorderlessButton title={'Create a new account?'} />
+        <Button
+          style={styles.borderlessButtonContainer}
+          borderless
+          title={'Create a new account?'}
+        />
       </View>
       {/* App info footer */}
       <View style={styles.footer}>
@@ -93,5 +97,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.white,
     fontWeight: '700'
+  },
+  borderlessButtonContainer: {
+    marginTop: 16,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
