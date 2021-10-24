@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 
 import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import { Images, Colors } from '../config';
