@@ -1,3 +1,5 @@
+// DEPRECATED
+// Rebuild this screen
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import * as Yup from 'yup';
@@ -43,20 +45,20 @@ export default function ForgotPasswordScreen({ navigation }) {
         onSubmit={values => handlePasswordReset(values)}
       >
         <FormField
-          name="email"
-          leftIcon="email"
-          placeholder="Enter email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
+          name='email'
+          leftIcon='email'
+          placeholder='Enter email'
+          autoCapitalize='none'
+          keyboardType='email-address'
+          textContentType='emailAddress'
           autoFocus={true}
         />
-        <FormButton title="Forgot Password" />
+        <FormButton title='Forgot Password' />
         {<FormErrorMessage error={customError} visible={true} />}
       </Form>
       <IconButton
         style={styles.backButton}
-        iconName="keyboard-backspace"
+        iconName='keyboard-backspace'
         color={Colors.white}
         size={30}
         onPress={() => navigation.goBack()}

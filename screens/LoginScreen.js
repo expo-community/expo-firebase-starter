@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
-import { Images, Colors } from '../config';
+import { Images, Colors, auth } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { loginValidationSchema } from '../utils';
 
@@ -14,9 +15,10 @@ export const LoginScreen = ({ navigation }) => {
 
   const handleLogin = values => {
     const { email, password } = values;
-    alert(`Email: ${email}, Password: ${password}`);
+    signInWithEmailAndPassword(auth, email, password).catch(error =>
+      setErrorState(error.message)
+    );
   };
-
   return (
     <>
       <View isSafe style={styles.container}>

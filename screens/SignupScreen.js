@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
-import { Images, Colors } from '../config';
+import { Images, Colors, auth } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
 
@@ -19,9 +20,12 @@ export const SignupScreen = ({ navigation }) => {
     confirmPasswordVisibility
   } = useTogglePasswordVisibility();
 
-  const handleSignup = values => {
+  const handleSignup = async values => {
     const { email, password } = values;
-    alert(`Email: ${email}, Password: ${password}`);
+
+    createUserWithEmailAndPassword(auth, email, password).catch(error =>
+      setErrorState(error.message)
+    );
   };
 
   return (
