@@ -41,3 +41,4 @@ Temporary Items
 # Project related
 firebaseConfig.js
 config/firebase.config.js
+.env
