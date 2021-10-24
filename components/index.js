@@ -3,5 +3,6 @@ import { View } from './View';
 import { Logo } from './Logo';
 import { Icon } from './Icon';
 import { Button } from './Button';
+import { FormErrorMessage } from './FormErrorMessage';
 
-export { View, TextInput, Logo, Icon, Button };
+export { View, TextInput, Logo, Icon, Button, FormErrorMessage };
