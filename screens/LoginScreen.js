@@ -5,7 +5,7 @@ import { View, TextInput, Logo, Button } from '../components';
 import { Images, Colors } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const { passwordVisibility, handlePasswordVisibility, rightIcon } =
     useTogglePasswordVisibility();
 
@@ -47,6 +47,7 @@ export const LoginScreen = () => {
           style={styles.borderlessButtonContainer}
           borderless
           title={'Create a new account?'}
+          onPress={() => navigation.navigate('Signup')}
         />
       </View>
       {/* App info footer */}
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
-    paddingTop: 12
+    paddingTop: 20
   },
   footer: {
     paddingHorizontal: 12,
