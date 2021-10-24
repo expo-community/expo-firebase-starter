@@ -3,6 +3,7 @@ import { TextInput as RNTextInput } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { View } from './View';
+import { Icon } from './Icon';
 import { Colors } from '../config';
 
 export const TextInput = ({ width = '100%', leftIconName, ...otherProps }) => {
@@ -19,14 +20,14 @@ export const TextInput = ({ width = '100%', leftIconName, ...otherProps }) => {
         borderColor: Colors.mediumGray
       }}
     >
-      {leftIconName && (
-        <MaterialCommunityIcons
+      {leftIconName ? (
+        <Icon
           name={leftIconName}
           size={22}
           color={Colors.mediumGray}
           style={{ marginRight: 10 }}
         />
-      )}
+      ) : null}
       <RNTextInput
         style={{
           flex: 1,
