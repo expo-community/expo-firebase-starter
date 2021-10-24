@@ -1,118 +1,97 @@
-import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
-import * as Yup from 'yup';
+import React from 'react';
+import { Text, StyleSheet } from 'react-native';
 
-import Colors from '../utils/colors';
-import SafeView from '../components/SafeView';
-import Form from '../components/Forms/Form';
-import FormField from '../components/Forms/FormField';
-import FormButton from '../components/Forms/FormButton';
-import IconButton from '../components/IconButton';
-import { loginWithEmail } from '../components/Firebase/firebase';
-import FormErrorMessage from '../components/Forms/FormErrorMessage';
-import useStatusBar from '../hooks/useStatusBar';
+import { View, TextInput, Logo, Button, BorderlessButton } from '../components';
+import { Images, Colors } from '../config';
+import { useTogglePasswordVisibility } from '../hooks';
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .required('Please enter a registered email')
-    .email()
-    .label('Email'),
-  password: Yup.string()
-    .required()
-    .min(6, 'Password must have at least 6 characters')
-    .label('Password')
-});
-
-export default function LoginScreen({ navigation }) {
-  useStatusBar('light-content');
-
-  const [passwordVisibility, setPasswordVisibility] = useState(true);
-  const [rightIcon, setRightIcon] = useState('eye');
-  const [loginError, setLoginError] = useState('');
-
-  function handlePasswordVisibility() {
-    if (rightIcon === 'eye') {
-      setRightIcon('eye-off');
-      setPasswordVisibility(!passwordVisibility);
-    } else if (rightIcon === 'eye-off') {
-      setRightIcon('eye');
-      setPasswordVisibility(!passwordVisibility);
-    }
-  }
-
-  async function handleOnLogin(values) {
-    const { email, password } = values;
-
-    try {
-      await loginWithEmail(email, password);
-    } catch (error) {
-      setLoginError(error.message);
-    }
-  }
+export const LoginScreen = () => {
+  const { passwordVisibility, handlePasswordVisibility, rightIcon } =
+    useTogglePasswordVisibility();
 
   return (
-    <SafeView style={styles.container}>
-      <Form
-        initialValues={{ email: '', password: '' }}
-        validationSchema={validationSchema}
-        onSubmit={values => handleOnLogin(values)}
-      >
-        <FormField
-          name="email"
-          leftIcon="email"
-          placeholder="Enter email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
+    <>
+      <View isSafe style={styles.container}>
+        {/* LogoContainer: consits app logo and screen title */}
+        <View style={styles.logoContainer}>
+          <Logo uri={Images.logo} />
+          <Text style={styles.screenTitle}>Welcome back!</Text>
+        </View>
+        {/* Input fields */}
+        <TextInput
+          name='email'
+          leftIconName='email'
+          placeholder='Enter email'
+          autoCapitalize='none'
+          keyboardType='email-address'
+          textContentType='emailAddress'
           autoFocus={true}
         />
-        <FormField
-          name="password"
-          leftIcon="lock"
-          placeholder="Enter password"
-          autoCapitalize="none"
+        <TextInput
+          name='password'
+          leftIconName='lock'
+          placeholder='Enter password'
+          autoCapitalize='none'
           autoCorrect={false}
           secureTextEntry={passwordVisibility}
-          textContentType="password"
+          textContentType='password'
           rightIcon={rightIcon}
           handlePasswordVisibility={handlePasswordVisibility}
         />
-        <FormButton title={'Login'} />
-        {<FormErrorMessage error={loginError} visible={true} />}
-      </Form>
-      <View style={styles.footerButtonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-          <Text style={styles.forgotPasswordButtonText}>Forgot Password?</Text>
-        </TouchableOpacity>
+        {/* Login button */}
+        <Button style={styles.button}>
+          <Text style={styles.buttonText}>Login</Text>
+        </Button>
+        {/* Button to navigate to SignupScreen to create a new account */}
+        <BorderlessButton title={'Create a new account?'} />
       </View>
-      <IconButton
-        style={styles.backButton}
-        iconName="keyboard-backspace"
-        color="#fff"
-        size={30}
-        onPress={() => navigation.goBack()}
-      />
-    </SafeView>
+      {/* App info footer */}
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>
+          Expo Firebase Starter App (based on managed workflow)
+        </Text>
+      </View>
+    </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    backgroundColor: Colors.mediumGrey
+    flex: 1,
+    backgroundColor: Colors.white,
+    paddingHorizontal: 12
   },
-  footerButtonContainer: {
-    marginVertical: 15,
-    justifyContent: 'center',
+  logoContainer: {
     alignItems: 'center'
   },
-  forgotPasswordButtonText: {
+  screenTitle: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: Colors.black,
+    paddingTop: 12
+  },
+  footer: {
+    paddingHorizontal: 12,
+    bottom: 48,
+    alignItems: 'center'
+  },
+  footerText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.orange
+  },
+  button: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+    backgroundColor: Colors.orange,
+    padding: 10,
+    borderRadius: 8
+  },
+  buttonText: {
+    fontSize: 20,
     color: Colors.white,
-    fontSize: 18,
-    fontWeight: '600'
-  },
-  backButton: {
-    justifyContent: 'center',
-    alignItems: 'center'
+    fontWeight: '700'
   }
 });
