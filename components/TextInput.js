@@ -3,8 +3,8 @@ import { TextInput as RNTextInput } from 'react-native';
 
 import { View } from './View';
 import { Icon } from './Icon';
-import { Colors } from '../config';
 import { Button } from './Button';
+import { Colors } from '../config';
 
 export const TextInput = ({
   width = '100%',
