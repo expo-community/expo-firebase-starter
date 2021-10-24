@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
-import { View, TextInput, Logo, Button } from '../components';
+import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import { Images, Colors } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
+import { signupValidationSchema } from '../utils';
 
 export const SignupScreen = ({ navigation }) => {
+  const [errorState, setErrorState] = useState('');
+
   const {
     passwordVisibility,
     handlePasswordVisibility,
@@ -15,6 +20,11 @@ export const SignupScreen = ({ navigation }) => {
     confirmPasswordVisibility
   } = useTogglePasswordVisibility();
 
+  const handleSignup = values => {
+    const { email, password } = values;
+    alert(`Email: ${email}, Password: ${password}`);
+  };
+
   return (
     <View isSafe style={styles.container}>
       {/* LogoContainer: consits app logo and screen title */}
@@ -22,42 +32,88 @@ export const SignupScreen = ({ navigation }) => {
         <Logo uri={Images.logo} />
         <Text style={styles.screenTitle}>Create a new account!</Text>
       </View>
-      {/* Input fields */}
-      <TextInput
-        name='email'
-        leftIconName='email'
-        placeholder='Enter email'
-        autoCapitalize='none'
-        keyboardType='email-address'
-        textContentType='emailAddress'
-        autoFocus={true}
-      />
-      <TextInput
-        name='password'
-        leftIconName='lock'
-        placeholder='Enter password'
-        autoCapitalize='none'
-        autoCorrect={false}
-        secureTextEntry={passwordVisibility}
-        textContentType='password'
-        rightIcon={rightIcon}
-        handlePasswordVisibility={handlePasswordVisibility}
-      />
-      <TextInput
-        name='confirmPassword'
-        leftIconName='lock'
-        placeholder='Enter password'
-        autoCapitalize='none'
-        autoCorrect={false}
-        secureTextEntry={confirmPasswordVisibility}
-        textContentType='password'
-        rightIcon={confirmPasswordIcon}
-        handlePasswordVisibility={handleConfirmPasswordVisibility}
-      />
-      {/* Signup button */}
-      <Button style={styles.button}>
-        <Text style={styles.buttonText}>Signup</Text>
-      </Button>
+      {/* Formik Wrapper */}
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+          confirmPassword: ''
+        }}
+        validationSchema={signupValidationSchema}
+        onSubmit={values => handleSignup(values)}
+      >
+        {({
+          values,
+          touched,
+          errors,
+          handleChange,
+          handleSubmit,
+          handleBlur
+        }) => {
+          return (
+            <>
+              {/* Input fields */}
+              <TextInput
+                name='email'
+                leftIconName='email'
+                placeholder='Enter email'
+                autoCapitalize='none'
+                keyboardType='email-address'
+                textContentType='emailAddress'
+                autoFocus={true}
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+              />
+              <FormErrorMessage error={errors.email} visible={touched.email} />
+              <TextInput
+                name='password'
+                leftIconName='key-variant'
+                placeholder='Enter password'
+                autoCapitalize='none'
+                autoCorrect={false}
+                secureTextEntry={passwordVisibility}
+                textContentType='password'
+                rightIcon={rightIcon}
+                handlePasswordVisibility={handlePasswordVisibility}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+              />
+              <FormErrorMessage
+                error={errors.password}
+                visible={touched.password}
+              />
+              <TextInput
+                name='confirmPassword'
+                leftIconName='key-variant'
+                placeholder='Enter password'
+                autoCapitalize='none'
+                autoCorrect={false}
+                secureTextEntry={confirmPasswordVisibility}
+                textContentType='password'
+                rightIcon={confirmPasswordIcon}
+                handlePasswordVisibility={handleConfirmPasswordVisibility}
+                value={values.confirmPassword}
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+              />
+              <FormErrorMessage
+                error={errors.confirmPassword}
+                visible={touched.confirmPassword}
+              />
+              {/* Display Screen Error Mesages */}
+              {errorState !== '' ? (
+                <FormErrorMessage error={errorState} visible={true} />
+              ) : null}
+              {/* Signup button */}
+              <Button style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Signup</Text>
+              </Button>
+            </>
+          );
+        }}
+      </Formik>
       {/* Button to navigate to Login screen */}
       <Button
         style={styles.borderlessButtonContainer}
