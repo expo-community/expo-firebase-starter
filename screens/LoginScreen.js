@@ -29,7 +29,7 @@ export const LoginScreen = ({ navigation }) => {
         />
         <TextInput
           name='password'
-          leftIconName='lock'
+          leftIconName='key-variant'
           placeholder='Enter password'
           autoCapitalize='none'
           autoCorrect={false}
@@ -76,8 +76,9 @@ const styles = StyleSheet.create({
     paddingTop: 20
   },
   footer: {
+    backgroundColor: Colors.white,
     paddingHorizontal: 12,
-    bottom: 48,
+    paddingBottom: 48,
     alignItems: 'center'
   },
   footerText: {
