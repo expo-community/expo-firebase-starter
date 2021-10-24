@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
-import { View, TextInput, Logo, Button, BorderlessButton } from '../components';
+import { View, TextInput, Logo, Button } from '../components';
 import { Images, Colors } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 
