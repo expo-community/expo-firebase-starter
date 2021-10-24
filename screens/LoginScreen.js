@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet } from 'react-native';
+import { Formik } from 'formik';
 
-import { View, TextInput, Logo, Button } from '../components';
+import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import { Images, Colors } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
+import { loginValidationSchema } from '../utils';
 
 export const LoginScreen = ({ navigation }) => {
+  const [errorState, setErrorState] = useState('');
   const { passwordVisibility, handlePasswordVisibility, rightIcon } =
     useTogglePasswordVisibility();
+
+  const handleLogin = values => {
+    const { email, password } = values;
+    alert(`Email: ${email}, Password: ${password}`);
+  };
 
   return (
     <>
@@ -17,31 +25,66 @@ export const LoginScreen = ({ navigation }) => {
           <Logo uri={Images.logo} />
           <Text style={styles.screenTitle}>Welcome back!</Text>
         </View>
-        {/* Input fields */}
-        <TextInput
-          name='email'
-          leftIconName='email'
-          placeholder='Enter email'
-          autoCapitalize='none'
-          keyboardType='email-address'
-          textContentType='emailAddress'
-          autoFocus={true}
-        />
-        <TextInput
-          name='password'
-          leftIconName='key-variant'
-          placeholder='Enter password'
-          autoCapitalize='none'
-          autoCorrect={false}
-          secureTextEntry={passwordVisibility}
-          textContentType='password'
-          rightIcon={rightIcon}
-          handlePasswordVisibility={handlePasswordVisibility}
-        />
-        {/* Login button */}
-        <Button style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </Button>
+        <Formik
+          initialValues={{
+            email: '',
+            password: ''
+          }}
+          validationSchema={loginValidationSchema}
+          onSubmit={values => handleLogin(values)}
+        >
+          {({
+            values,
+            touched,
+            errors,
+            handleChange,
+            handleSubmit,
+            handleBlur
+          }) => (
+            <>
+              {/* Input fields */}
+              <TextInput
+                name='email'
+                leftIconName='email'
+                placeholder='Enter email'
+                autoCapitalize='none'
+                keyboardType='email-address'
+                textContentType='emailAddress'
+                autoFocus={true}
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+              />
+              <FormErrorMessage error={errors.email} visible={touched.email} />
+              <TextInput
+                name='password'
+                leftIconName='key-variant'
+                placeholder='Enter password'
+                autoCapitalize='none'
+                autoCorrect={false}
+                secureTextEntry={passwordVisibility}
+                textContentType='password'
+                rightIcon={rightIcon}
+                handlePasswordVisibility={handlePasswordVisibility}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+              />
+              <FormErrorMessage
+                error={errors.password}
+                visible={touched.password}
+              />
+              {/* Display Screen Error Mesages */}
+              {errorState !== '' ? (
+                <FormErrorMessage error={errorState} visible={true} />
+              ) : null}
+              {/* Login button */}
+              <Button style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Login</Text>
+              </Button>
+            </>
+          )}
+        </Formik>
         {/* Button to navigate to SignupScreen to create a new account */}
         <Button
           style={styles.borderlessButtonContainer}
