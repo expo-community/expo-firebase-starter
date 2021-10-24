@@ -94,6 +94,12 @@ export const LoginScreen = ({ navigation }) => {
           title={'Create a new account?'}
           onPress={() => navigation.navigate('Signup')}
         />
+        <Button
+          style={styles.borderlessButtonContainer}
+          borderless
+          title={'Forgot Password'}
+          onPress={() => navigation.navigate('ForgotPassword')}
+        />
       </View>
       {/* App info footer */}
       <View style={styles.footer}>
