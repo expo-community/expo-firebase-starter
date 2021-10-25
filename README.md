@@ -14,13 +14,16 @@ Is a quicker way to start with Expo + Firebase (using JS SDK) projects. It inclu
 - Firebase JS SDK
 - Firebase as backend for email auth
 - custom and reusable components
+- custom hook to toggle password field visibility on a TextInput
 - handles different field types in forms
 - handles server errors using Formik
-- Login/Signup form built using Formik & yup
+- Login, Signup & Password Reset form built using Formik & yup
 - show/hide Password Field's visibility 👁
 - uses Context API & checks user's auth state
 - handles Forgot Password Reset using Firebase email method
 - uses [Expo Vector Icons](https://icons.expo.fyi/)
+- uses [KeyboardAwareScrollView](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package to handle keyboard appearance and automatically scrolls to focused TextInput
+- uses `dotenv` and `expo-constants` packages to manage environment variables (so that they are not exposed on public repositories)
 - all components are now functional components and use [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 
 ## Installation
@@ -104,7 +107,7 @@ Main screens:
 
 ## ⚠️ Please Note
 
-Expo uses Firebase Web SDK and does not support all Firebase services such as phone auth. If you are looking forward to use those services, please use `react-native-firebase` in with Expo bare project, or an [Expo custom dev client](https://blog.expo.dev/introducing-custom-development-clients-5a2c79a9ddf8) or a plain React Native project.
+Expo uses Firebase Web SDK and does not support all Firebase services such as phone auth. If you are looking forward to use those services, please use `react-native-firebase` in a Expo bare project, or an [Expo custom dev client](https://blog.expo.dev/introducing-custom-development-clients-5a2c79a9ddf8) or a plain React Native project.
 
 [**Here is more on what and why Expo cannot support complete Firebase integration**](https://expo.canny.io/feature-requests/p/full-native-firebase-integration)
 
