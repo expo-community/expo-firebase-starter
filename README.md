@@ -11,15 +11,14 @@ Is a quicker way to start with Expo + Firebase (using JS SDK) projects. It inclu
 
 - based on Expo SDK `43`
 - navigation using `react-navigation` 6.x.x
-- Firebase JS SDK
+- Firebase JS SDK v9
 - Firebase as backend for email auth
 - custom and reusable components
 - custom hook to toggle password field visibility on a TextInput
-- handles different field types in forms
 - handles server errors using Formik
 - Login, Signup & Password Reset form built using Formik & yup
 - show/hide Password Field's visibility 👁
-- uses Context API & checks user's auth state
+- uses a custom Provider using Context API & Firebase's `onAuthStateChanged` handler to checks user's auth state with
 - handles Forgot Password Reset using Firebase email method
 - uses [Expo Vector Icons](https://icons.expo.fyi/)
 - uses [KeyboardAwareScrollView](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package to handle keyboard appearance and automatically scrolls to focused TextInput
@@ -95,7 +94,7 @@ Main screens:
 - Login
 - Signup
 - Forgot password
-- Home (Bare Minimum)
+- Home (Bare Minimum) with a logout button
 
 ![Login screen with validation](https://i.imgur.com/cydaOYN.png)
 
