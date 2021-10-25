@@ -7,18 +7,23 @@
   <img alt="Supports Expo Android" longdesc="Supports Expo Android" src="https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff" />  
 </p>
 
-Is a quicker way to start with Expo + Firebase projects. It includes:
+Is a quicker way to start with Expo + Firebase (using JS SDK) projects. It includes:
 
-- based on Expo SDK `42`
-- navigation using `react-navigation` 5.x.x
+- based on Expo SDK `43`
+- navigation using `react-navigation` 6.x.x
+- Firebase JS SDK
 - Firebase as backend for email auth
-- custom and reusable form components
+- custom and reusable components
+- custom hook to toggle password field visibility on a TextInput
 - handles different field types in forms
 - handles server errors using Formik
-- Login/Signup form built using Formik & yup
+- Login, Signup & Password Reset form built using Formik & yup
 - show/hide Password Field's visibility 👁
 - uses Context API & checks user's auth state
-- implement Password Reset Screen
+- handles Forgot Password Reset using Firebase email method
+- uses [Expo Vector Icons](https://icons.expo.fyi/)
+- uses [KeyboardAwareScrollView](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package to handle keyboard appearance and automatically scrolls to focused TextInput
+- uses `dotenv` and `expo-constants` packages to manage environment variables (so that they are not exposed on public repositories)
 - all components are now functional components and use [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 
 ## Installation
@@ -29,22 +34,18 @@ Is a quicker way to start with Expo + Firebase projects. It includes:
 $ npx create-react-native-app --template https://github.com/expo-community/expo-firebase-starter
 ```
 
-2. Rename the file `example.firebaseConfig.js` to `firebaseConfig.js`
-3. Update `firebaseConfig.js` with your own configuration, e.g.:
+2. Rename the file `example.env` to `.env`
+3. Update `.env` with your own configuration, e.g.:
 
-```js
-// Rename this file to "firebaseConfig.js" before use
-// Replace all Xs with real Firebase API keys
-
-export default {
-  apiKey: 'XXXX',
-  authDomain: 'XXXX',
-  databaseURL: 'XXXX',
-  projectId: 'XXXX',
-  storageBucket: 'XXXX',
-  messagingSenderId: 'XXXX',
-  appId: 'XXXX'
-};
+```shell
+# Rename this file to ".env" before use
+# Replace XXXX's with your own Firebase config keys
+API_KEY=XXXX
+AUTH_DOMAIN=XXXX
+PROJECT_ID=XXXX
+STORAGE_BUCKET=XXXX
+MESSAGING_SENDER_ID=XXXX
+APP_ID=XXXX
 ```
 
 4. Start the project:
@@ -56,39 +57,34 @@ export default {
 
 ```shell
 Expo Firebase Starter
-├── assets ➡️ All static assets
+├── assets ➡️ All static assets, includes app logo
 ├── components ➡️ All re-suable UI components for form screens
-│   └── Firebase ➡️ Firebase related config directory
-│       └── firebaseConfig.js ➡️ Firebase API keys
-│       └── firebase.js ➡️ Firebase app initialization & authentication helper methods
-│   └── Forms ➡️ Reusable form components
-│       └── Form.js ➡️ Reusable Form wrapper to apply Formik
-│       └── FormButton.js ➡️ Reusable button component that handles form submit using Formik context hook
-│       └── FormErrorMessage.js ➡️ Reusable component to display server errors from Firebase
-│       └── FormField.js ➡️ Reusable TextInput component
-│   └── AppButton.js ➡️ Button component
-│   └── AppTextInput.js ➡️ TextInput component
-│   └── IconButton.js ➡️ Button with icon only component
-│   └── SafeView.js ➡️ SafeAreaView wrapper component
-│   └── Spinner.js ➡️ Loading indicator component
+│   └── Button.js ➡️ Custom Button component using Pressable, comes with two variants and handles opacity
+│   └── TextInput.js ➡️ Custom TextInput component that supports left and right cons
+│   └── Icon.js ➡️ Icon component
+│   └── FormErrorMessage.js ➡️ Component to display server errors from Firebase
+│   └── LoadingIndicator.js ➡️ Loading indicator component
+│   └── Logo.js ➡️ Logo component
+│   └── View.js ➡️ Custom View component that supports safe area views
 ├── hooks ➡️ All custom hook components
-│   └── useStatusBar.js ➡️ A custom hook based on @react-navigation library to animate the status bar style changes
+│   └── useTogglePasswordVisibility.js ➡️ A custom hook that toggles password visibility on a TextInput component on a confirm password field
+├── config ➡️ All configuration files
+│   └── firebase.js ➡️ Configuration file to initialize firebase with firebaseConfig and auth
+│   └── images.js ➡️ Require image assets, reusable values across the app
+│   └── theme.js ➡️ Default set of colors, reusable values across the app
+├── providers ➡️ All custom providers that use React Context API
+│   └── AuthenticatedUserProvider.js ➡️ An Auth User Context component that shares Firebase user object when logged-in
 ├── navigation
 │   └── AppStack.js ➡️ Protected routes such as Home screen
 │   └── AuthStack.js ➡️ Routes such as Login screen, when the user is not authenticated
-│   └── AuthUserProvider.js ➡️ An Auth User Context component that shares Firebase user object when logged-in
-│   └── navigationTheme.js ➡️ A default theme for navigation components
-│   └── Routes.js ➡️ Switch between Auth and App stacks based on Firebase user logged-in state
+│   └── RootNavigator.js ➡️ Switch between Auth screens and App screens based on Firebase user logged-in state
 ├── screens
 │   └── ForgotPassword.js ➡️ Forgot Password screen component
 │   └── HomeScreen.js ➡️ Protected route/screen component
 │   └── LoginScreen.js ➡️ Login screen component
-│   └── RegisterScreen.js ➡️ Register screen component
-│   └── WelcomeScreen.js ➡️ Initial screen component
-├── utils
-│   └── colors.js ➡️ Default, reusable values across the app
-├── App.js ➡️ Entry Point for Mobile apps
-├── app.json ➡️ Expo config file
+│   └── SignupScreen.js ➡️ Signup screen component
+├── App.js ➡️ Entry Point for Mobile apps, wrap all providers here
+├── app.config.js ➡️ Expo config file
 └── babel.config.js ➡️ Babel config (should be using `babel-preset-expo`)
 ```
 
@@ -99,23 +95,22 @@ Main screens:
 - Login
 - Signup
 - Forgot password
+- Home (Bare Minimum)
 
-![Initial Welcome Screen](https://i.imgur.com/KJAzftx.gif)
+![Login screen with validation](https://i.imgur.com/cydaOYN.png)
 
-![Successful Signup](https://i.imgur.com/Ih72jol.gif)
+![Successful Signup](https://i.imgur.com/62kcirI.png)
 
-![Successful Login](https://i.imgur.com/Xp0tiI1.gif)
+![Forgot Password](https://i.imgur.com/9J9a4Nl.png)
 
-![Forgot Password](https://i.imgur.com/HDvQMfp.png)
+![Validation on Signup screens](https://i.imgur.com/DG0wTjG.png)
 
-## ⚠️⚠️⚠️
+## ⚠️ Please Note
 
-Expo uses Firebase Web SDK and does not support all Firebase services such as phone auth. If you are looking forward to use those services, please use `react-native-firebase` in a vanilla react native app.
+Expo uses Firebase Web SDK and does not support all Firebase services such as phone auth. If you are looking forward to use those services, please use `react-native-firebase` in a Expo bare project, or an [Expo custom dev client](https://blog.expo.dev/introducing-custom-development-clients-5a2c79a9ddf8) or a plain React Native project.
 
 [**Here is more on what and why Expo cannot support complete Firebase integration**](https://expo.canny.io/feature-requests/p/full-native-firebase-integration)
 
 ---
 
-<strong>Built by [@amanhimself](https://twitter.com/amanhimself)</strong>
-
-**Happy Coding!** 🎉🎉
+<strong>Built with 💜 by [@amanhimself](https://twitter.com/amanhimself)</strong>
