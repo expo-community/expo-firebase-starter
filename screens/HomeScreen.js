@@ -7,11 +7,14 @@ import * as Location from 'expo-location';
 import { auth } from '../config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
+import { useTheme } from '@react-navigation/native';
 
 export const HomeScreen = ({navigation}) => {
+  const {colors} = useTheme()
   const insets = useSafeAreaInsets()
   const [location, setLocation] = useState(null);
   const [region, setRegion] = useState(null);
+  const [displayRegion, setDisplayRegion] = useState(null)
   const [centered, setCentered] = useState(true)
 
   useEffect(() => {
@@ -27,8 +30,8 @@ export const HomeScreen = ({navigation}) => {
           setRegion({
             latitude: loc.coords.latitude,
             longitude: loc.coords.longitude,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
+            latitudeDelta: 0.025,
+            longitudeDelta: 0.025,
           })
         }
         setLocation(loc);
@@ -41,14 +44,23 @@ export const HomeScreen = ({navigation}) => {
     setRegion({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-      latitudeDelta: 0.05,
-      longitudeDelta: 0.05,
+      latitudeDelta: 0.025,
+      longitudeDelta: 0.025,
+    })
+    setDisplayRegion({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.025,
+      longitudeDelta: 0.025,
     })
     setCentered(true)
   }
 
   const regionChange = (region) => {
-    if (centered) setCentered(false)
+    if (centered) {
+      setDisplayRegion(null)
+      setCentered(false)
+    }
     setRegion(region)
   }
 
@@ -69,13 +81,16 @@ export const HomeScreen = ({navigation}) => {
         userInterfaceStyle={'dark'}
         style={StyleSheet.absoluteFill}
         initialRegion={region}
-        region={region}
+        region={displayRegion}
         onRegionChange={regionChange}
       >
         {location&&<Marker
         coordinate={location.coords}
         title={"Party!!"}
-        />}
+        icon
+        >
+          <View style={{width: 15, height: 15, backgroundColor: colors.primary, borderRadius: 10, borderWidth: 2, borderStyle: "solid", borderColor: "#fff"}} />
+          </Marker>}
       </MapView>}
       <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
           <View style={{margin: 32}}>
