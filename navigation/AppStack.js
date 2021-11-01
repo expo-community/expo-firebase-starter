@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { HomeScreen } from '../screens';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 export const AppStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name='Home' component={HomeScreen} />
+      <Stack.Group screenOptions={{ headerLargeTitle: true }}>
+      <Stack.Screen name='Party Near You' component={HomeScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

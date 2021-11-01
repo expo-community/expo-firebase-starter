@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'Expo Firebase Starter',
+    name: 'Party Near You',
     slug: 'expo-firebase',
     privacy: 'public',
     platforms: ['ios', 'android'],
