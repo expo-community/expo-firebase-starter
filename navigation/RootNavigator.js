@@ -3,16 +3,20 @@ import { DefaultTheme, NavigationContainer, DarkTheme } from '@react-navigation/
 import { onAuthStateChanged } from 'firebase/auth';
 
 import { AuthStack } from './AuthStack';
-import { AppStack } from './AppStack';
+import { AppStack, PartyStack } from './AppStack';
 import { AuthenticatedUserContext } from '../providers';
 import { LoadingIndicator } from '../components';
 import { auth } from '../config';
 import { useColorScheme } from 'react-native';
+import { useAtParty } from '../hooks';
+
 
 export const RootNavigator = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const scheme = useColorScheme()
   const [isLoading, setIsLoading] = useState(true);
+  const atParty = useAtParty()
+
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
@@ -28,6 +32,13 @@ export const RootNavigator = () => {
     return unsubscribeAuthStateChanged;
   }, [user]);
 
+  useEffect(() => {
+    if (atParty) {
+      return <PartyStack />
+    }
+  }, [atParty])
+
+
   if (isLoading) {
     return <LoadingIndicator />;
   }
@@ -40,15 +51,19 @@ export const RootNavigator = () => {
       background: "rgb(28, 28, 30)",
       card: "rgb(28, 28, 30)",
       text: "#fff",
-      border: "rgb(229, 229, 234)"
+      border: "rgb(229, 229, 234)",
+      warning: "rgb(255, 159, 20)",
+      error: "rgb(255, 69, 58)",
+      success: "rgb(48, 209, 88)",
+      info: "rgb(191, 90, 242)"
     }
   }
 
   //scheme === 'dark' ? DarkTheme : DefaultTheme
 
   return (
-    <NavigationContainer theme={DarkTheme}>
-      {user ? <AppStack /> : <AuthStack />}
+    <NavigationContainer theme={theme}>
+      {user ? atParty ? <PartyStack /> : <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };
