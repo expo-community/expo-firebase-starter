@@ -56,13 +56,13 @@ export const PartyModeScreen = ({navigation}) => {
     <View style={styles.container}>
       {atParty && 
         <View style={styles.infoView}>
-            <Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>
+            {/*<Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>*/}
             <Text style={{fontSize: 17, color: colors.success}}>{atParty.good ? atParty.good.length : 0}</Text>
             <Text style={{fontSize: 17, color: colors.error}}>{atParty.bad ? atParty.bad.length : 0}</Text>
             <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(atParty).filter(field => field.substring(0, 5) == "user_" && atParty[field]).length || 0}</Text>
         </View>}
           <View style={{margin: 32}}>
-            <IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(atParty.id, "police")}/>
+            {/*<IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(atParty.id, "police")}/>*/}
             <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(atParty.id, "good")} />
             <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(atParty.id, "bad")} />
             <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />

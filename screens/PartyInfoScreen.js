@@ -58,7 +58,7 @@ export const PartyInfoScreen = ({navigation, route}) => {
     <View style={styles.container}>
       {party && 
         <View style={styles.infoView}>
-            <Text style={{fontSize: 17, color: colors.warning}}>{party.police ? party.police.length : 0}</Text>
+            {/*<Text style={{fontSize: 17, color: colors.warning}}>{party.police ? party.police.length : 0}</Text>*/}
             <Text style={{fontSize: 17, color: colors.success}}>{party.good ? party.good.length : 0}</Text>
             <Text style={{fontSize: 17, color: colors.error}}>{party.bad ? party.bad.length : 0}</Text>
             <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).length || 0}</Text>
