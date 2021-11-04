@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
@@ -6,8 +7,8 @@ import { View } from './View';
 
 export const LoadingIndicator = () => {
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size='large' color={Colors.orange} />
+    <View style={[styles.container, StyleSheet.absoluteFill, {backgroundColor: "rgb(28, 28, 30)"}]}>
+      <ActivityIndicator size='large' />
     </View>
   );
 };

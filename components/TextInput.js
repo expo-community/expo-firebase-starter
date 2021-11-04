@@ -16,7 +16,6 @@ export const TextInput = ({
   return (
     <View
       style={{
-        backgroundColor: Colors.white,
         borderRadius: 8,
         flexDirection: 'row',
         padding: 12,
@@ -39,7 +38,7 @@ export const TextInput = ({
           flex: 1,
           width: '100%',
           fontSize: 18,
-          color: Colors.black
+          color: "#fff"
         }}
         placeholderTextColor={Colors.mediumGray}
         {...otherProps}

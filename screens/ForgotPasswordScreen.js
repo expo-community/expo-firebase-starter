@@ -6,6 +6,7 @@ import { sendPasswordResetEmail } from 'firebase/auth';
 import { passwordResetSchema } from '../utils';
 import { Colors, auth } from '../config';
 import { View, TextInput, Button, FormErrorMessage } from '../components';
+import IOSButton from '../components/IOSButton';
 
 export const ForgotPasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
@@ -23,9 +24,6 @@ export const ForgotPasswordScreen = ({ navigation }) => {
 
   return (
     <View isSafe style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.screenTitle}>Reset your password</Text>
-      </View>
       <Formik
         initialValues={{ email: '' }}
         validationSchema={passwordResetSchema}
@@ -58,9 +56,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
               <FormErrorMessage error={errorState} visible={true} />
             ) : null}
             {/* Password Reset Send Email  button */}
-            <Button style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}>Send Reset Email</Text>
-            </Button>
+            <IOSButton style="filled" ap="primary" onPress={handleSubmit} title="Send Reset Email"/>
           </>
         )}
       </Formik>
@@ -78,8 +74,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 12
+    paddingHorizontal: 16
   },
   innercontainer: {
     alignItems: 'center'

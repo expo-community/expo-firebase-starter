@@ -8,6 +8,7 @@ import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import { Images, Colors, auth } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { signupValidationSchema } from '../utils';
+import IOSButton from '../components/IOSButton';
 
 export const SignupScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
@@ -32,11 +33,6 @@ export const SignupScreen = ({ navigation }) => {
   return (
     <View isSafe style={styles.container}>
       <KeyboardAwareScrollView enableOnAndroid={true}>
-        {/* LogoContainer: consits app logo and screen title */}
-        <View style={styles.logoContainer}>
-          <Logo uri={Images.logo} />
-          <Text style={styles.screenTitle}>Create a new account!</Text>
-        </View>
         {/* Formik Wrapper */}
         <Formik
           initialValues={{
@@ -111,16 +107,15 @@ export const SignupScreen = ({ navigation }) => {
                 <FormErrorMessage error={errorState} visible={true} />
               ) : null}
               {/* Signup button */}
-              <Button style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Signup</Text>
-              </Button>
+              <IOSButton style="filled" ap="primary" title="Signup" onPress={handleSubmit} top/>
             </>
           )}
         </Formik>
         {/* Button to navigate to Login screen */}
-        <Button
-          style={styles.borderlessButtonContainer}
-          borderless
+        <IOSButton
+          top
+          style="ghost"
+          ap="primary"
           title={'Already have an account?'}
           onPress={() => navigation.navigate('Login')}
         />
@@ -132,8 +127,7 @@ export const SignupScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 12
+    paddingHorizontal: 16
   },
   logoContainer: {
     alignItems: 'center'

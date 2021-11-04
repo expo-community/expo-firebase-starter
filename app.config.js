@@ -3,23 +3,25 @@ import 'dotenv/config';
 export default {
   expo: {
     name: 'Party Near You',
-    slug: 'expo-firebase',
-    privacy: 'public',
+    slug: 'party',
+    privacy: 'unlisted',
     platforms: ['ios', 'android'],
-    version: '0.15.0',
+    version: '1.0.0',
     orientation: 'portrait',
-    icon: './assets/flame.png',
+    icon: './assets/PNY.png',
     splash: {
-      image: './assets/splash.png',
-      resizeMode: 'cover',
-      backgroundColor: '#F57C00'
+      image: './assets/PNY.png',
+      resizeMode: 'contain',
+      backgroundColor: '#1c1c1e'
     },
     updates: {
       fallbackToCacheTimeout: 0
     },
     assetBundlePatterns: ['**/*'],
     ios: {
-      supportsTablet: true
+      supportsTablet: false,
+      buildNumber: "3",
+      bundleIdentifier: "com.partynearyou.app"
     },
     extra: {
       apiKey: process.env.API_KEY,

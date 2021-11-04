@@ -8,13 +8,14 @@ import { auth } from '../config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
-import { useAtParty } from '../hooks';
+import { useparty } from '../hooks';
 import { attendParty, leaveParty, reportInfo } from '../config/firebase';
+import * as Linking from 'expo-linking';
 
-export const PartyModeScreen = ({navigation}) => {
+export const PartyInfoScreen = ({navigation, route}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
-  const atParty = useAtParty()
+  const {party} = route.params
   // const [location, setLocation] = useState(null);
 
   /*useEffect(() => {
@@ -33,31 +34,37 @@ export const PartyModeScreen = ({navigation}) => {
       return unsubscribeLocationChange
     })();
   }, []);*/
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={() => atParty ? leaveParty(atParty.id) : {}} title="End Party Mode" />
+        <Button onPress={() => navigation.goBack()} title="Cancel" />
       ),
     });
-  }, [navigation, atParty]);
+  }, [navigation]);
+  const openDirections = () => {
+    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+    const latLng = `${party.loc.latitude},${party.loc.longitude}`;
+    const label = 'Party';
+    const url = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`
+    });
 
-  
+        
+    Linking.openURL(url);
+  }
   return (
     
     <View style={styles.container}>
-      {atParty && 
+      {party && 
         <View style={styles.infoView}>
-            <Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>
-            <Text style={{fontSize: 17, color: colors.success}}>{atParty.good ? atParty.good.length : 0}</Text>
-            <Text style={{fontSize: 17, color: colors.error}}>{atParty.bad ? atParty.bad.length : 0}</Text>
-            <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(atParty).filter(field => field.substring(0, 5) == "user_" && atParty[field]).length || 0}</Text>
+            <Text style={{fontSize: 17, color: colors.warning}}>{party.police ? party.police.length : 0}</Text>
+            <Text style={{fontSize: 17, color: colors.success}}>{party.good ? party.good.length : 0}</Text>
+            <Text style={{fontSize: 17, color: colors.error}}>{party.bad ? party.bad.length : 0}</Text>
+            <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).length || 0}</Text>
         </View>}
           <View style={{margin: 32}}>
-            <IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(atParty.id, "police")}/>
-            <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(atParty.id, "good")} />
-            <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(atParty.id, "bad")} />
-            <IOSButton style="filled" ap="info" title="Emergency Contact" top />
+            <IOSButton style="filled" ap="primary" title="Directions" onPress={() => openDirections()}/>
           </View>
     </View>
   );

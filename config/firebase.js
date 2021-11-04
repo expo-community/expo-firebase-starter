@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, doc, addDoc, setDoc, updateDoc, where } from "@firebase/firestore";
+import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, doc, addDoc, setDoc, updateDoc, where, arrayUnion } from "@firebase/firestore";
 import Constants from 'expo-constants';
 const geofire = require("geofire-common")
 
@@ -70,7 +70,7 @@ export function attendParty(parties, coords) {
     return new Promise((resolve, reject) => {
       const geohash = geofire.geohashForLocation([coords.latitude, coords.longitude])
       const newDoc = {geohash, loc: coords}
-      newDoc[uid] = true
+      newDoc["user_"+uid] = true
       addDoc(collection(firestore, "parties"), newDoc).then(() => resolve())
       
     })
@@ -90,7 +90,13 @@ export function distance(coords1, coords2) {
 }
 
 export function partiesListener (uid, callback) {
-  onSnapshot(query(collection(firestore, "parties"), where("user_"+uid, "==", true)), callback)
+  return onSnapshot(query(collection(firestore, "parties"), where("user_"+uid, "==", true)), callback)
+}
+
+export function reportInfo(partyID, field) {
+  const updateData = {}
+  updateData[field] = arrayUnion(auth.currentUser.uid)
+  return updateDoc(doc(firestore, "parties", partyID), updateData)
 }
 
 export { auth, firestore };

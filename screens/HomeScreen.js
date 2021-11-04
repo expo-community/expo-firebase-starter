@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, Button, RefreshControlBase, ActivityIndicator } from 'react-native';
 import { signOut } from 'firebase/auth';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Circle, Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
 
 import { auth } from '../config';
@@ -60,7 +60,7 @@ export const HomeScreen = ({navigation}) => {
     listenParties(location.coords, 10000).then((partyPromises) => {
       var docs = []
       partyPromises.forEach((bound) => bound.forEach(party => docs.push({...party.data(), id: party.id})))
-      docs = docs.map(doc => ({...doc, distance: distance(doc.loc, location.coords)})).sort((a, b) => a.distance - b.distance)
+      docs = docs.map(doc => ({...doc, distance: distance(doc.loc, location.coords), radius: partySize(doc), color: partyColor(doc)})).sort((a, b) => a.distance - b.distance)
 
       console.log(JSON.stringify(docs[0]))
       setRefreshing(false)
@@ -100,10 +100,35 @@ export const HomeScreen = ({navigation}) => {
     setPartyLoading(true)
     attendParty(parties, location.coords).then(() => setPartyLoading(false))
   }
+  const partySize = (party) => {
+    const attendance = Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).length
+    //const attendance = 30
+    return 15*(attendance/2)
+  }
+  const partyColor = (party) => {
+    var color = "infoTransparent"
+    const people = Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).length
+    const good = party.good ? party.good.length : 0
+    const bad = party.bad ? party.bad.length : 0
+    const police = party.police ? party.police.length : 0
+    if (good > bad) color = "successTransparent"
+    if (bad >= good && bad > 0) color = "errorTransparent"
+    if (police > 0.01*people) color = "warningTransparent"
+    return color
+  }
+  const onMapPress = (event) => {
+    const coordinates = event.nativeEvent.coordinate;
+    var ps = parties.map((party) => ({...party, touchDist: distance(coordinates, party.loc)*1000} )).filter(party => party.touchDist <= party.radius).sort((a, b) => a.touchDist - b.touchDist)
+    if (ps.length > 0) {
+      console.log("tapped on party")
+      navigation.navigate("Party Info", {party: ps[0]})
+    }
+
+  }
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={handleLogout} title="Profile" />
+        <Button onPress={handleLogout} title="Logout" />
       ),
     });
   }, [navigation]);
@@ -116,36 +141,38 @@ export const HomeScreen = ({navigation}) => {
         initialRegion={region}
         region={displayRegion}
         onRegionChange={regionChange}
+        onPress={onMapPress}
       >
         
-        {parties.map((party) => <Marker key={party.id} coordinate={{latitude: party.loc.latitude, longitude: party.loc.longitude}}><View style={{width: 30, height: 30, backgroundColor: colors.info, borderRadius: 15, borderWidth: 2, borderStyle: "solid", borderColor: "#fff"}} />
-          </Marker>)}
+        {/*parties.map((party) => <Marker key={party.id} coordinate={{latitude: party.loc.latitude, longitude: party.loc.longitude}}><View style={{width: partySize(party), height: partySize(party), backgroundColor: colors.infoTransparent, borderRadius: partySize(party)/2, borderWidth: 2, borderStyle: "solid", borderColor: "#fff"}} />
+          </Marker>)*/}
+          {parties.map((party) => <Circle fillColor={colors[party.color]} strokeColor="#fff" key={party.id} center={{latitude: party.loc.latitude, longitude: party.loc.longitude}} radius={party.radius}></Circle>)}
 
           {location&&<Marker
         coordinate={location.coords}
-        title={"Party!!"}
+        title={"You Are Here"}
         >
-          <View style={{width: 15, height: 15, backgroundColor: colors.primary, borderRadius: 10, borderWidth: 2, borderStyle: "solid", borderColor: "#fff"}} />
+          <View style={{width: 15, height: 15, backgroundColor: colors.primary, borderRadius: 10, borderWidth: 2, borderStyle: "solid", borderColor: "rgba(255, 255, 255, 0.8)"}} />
           </Marker>}
       </MapView>}
         
       
-      <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
+      {location && <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
           <View style={{margin: 32}}>
             <IOSButton onPress={() => partyLoading ? {} : atParty()} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "At Party"} />
           </View>
-      </View>
-      {!centered && 
+      </View>}
+      {!centered && location && 
       <View style={{position: "absolute"}}>
           <View style={{margin: 32}}>
             <IOSButton style="shadow" ap="primary" title="Center" onPress={() => reCenter()} />
           </View>
       </View>}
-      <View style={{position: "absolute", right: 0}}>
+      {location && <View style={{position: "absolute", right: 0}}>
           <View style={{margin: 32}}>
             <IOSButton style="shadow" ap="primary" title={refreshing ? <ActivityIndicator /> : "Refresh"} onPress={() => refreshing ? {} : refresh()} />
           </View>
-      </View>
+      </View>}
     </View>
   );
 };

@@ -8,6 +8,7 @@ import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
 import { Images, Colors, auth } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { loginValidationSchema } from '../utils';
+import IOSButton from '../components/IOSButton';
 
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState('');
@@ -21,14 +22,8 @@ export const LoginScreen = ({ navigation }) => {
     );
   };
   return (
-    <>
-      <View isSafe style={styles.container}>
+      <View style={styles.container}>
         <KeyboardAwareScrollView enableOnAndroid={true}>
-          {/* LogoContainer: consits app logo and screen title */}
-          <View style={styles.logoContainer}>
-            <Logo uri={Images.logo} />
-            <Text style={styles.screenTitle}>Welcome back!</Text>
-          </View>
           <Formik
             initialValues={{
               email: '',
@@ -86,43 +81,33 @@ export const LoginScreen = ({ navigation }) => {
                   <FormErrorMessage error={errorState} visible={true} />
                 ) : null}
                 {/* Login button */}
-                <Button style={styles.button} onPress={handleSubmit}>
-                  <Text style={styles.buttonText}>Login</Text>
-                </Button>
+                <IOSButton style={"filled"} ap="primary" onPress={handleSubmit} title="Login" top />
               </>
             )}
           </Formik>
           {/* Button to navigate to SignupScreen to create a new account */}
-          <Button
-            style={styles.borderlessButtonContainer}
-            borderless
+          <IOSButton
+            top
+            style="ghost"
+            ap="primary"
             title={'Create a new account?'}
             onPress={() => navigation.navigate('Signup')}
           />
-          <Button
-            style={styles.borderlessButtonContainer}
-            borderless
+          <IOSButton
+            style="ghost"
+            ap="primary"
             title={'Forgot Password'}
             onPress={() => navigation.navigate('ForgotPassword')}
           />
         </KeyboardAwareScrollView>
       </View>
-
-      {/* App info footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          Expo Firebase Starter App (based on managed workflow)
-        </Text>
-      </View>
-    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
-    paddingHorizontal: 12
+    paddingHorizontal: 16
   },
   logoContainer: {
     alignItems: 'center'

@@ -35,6 +35,18 @@ export const IOSButton = (props) => {
         width: "100%",
         alignItems: "center",
         justifyContent: "center"
+      },
+      text_ghost: {
+        fontSize: 17,
+        color: theme.colors[props.ap],
+        margin: 12,
+      },
+      ghost: {
+        borderRadius: 10,
+        height: 44,
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center"
       }
     });
 
