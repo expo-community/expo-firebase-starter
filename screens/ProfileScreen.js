@@ -53,6 +53,9 @@ export const ProfileScreen = ({navigation, route}) => {
       headerRight: () => (
         <Button onPress={() => navigation.goBack()} title="Done" />
       ),
+      headerLeft: () => (
+        <Button onPress={() => signOut(auth).catch(error => console.log('Error logging out: ', error))} title="Logout" />
+      ),
     });
   }, [navigation]);
   return (
@@ -70,10 +73,6 @@ export const ProfileScreen = ({navigation, route}) => {
                   onChangeText={(text) => setNumber(text)}
                 />
                 </View>
-          <View style={{marginHorizontal: 32}}>
-          
-            <IOSButton top style="filled" ap="primary" title="Logout" onPress={() => signOut(auth).catch(error => console.log('Error logging out: ', error))}/>
-          </View>
     </View>
   );
 };
