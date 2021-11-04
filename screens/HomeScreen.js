@@ -101,9 +101,11 @@ export const HomeScreen = ({navigation}) => {
     attendParty(parties, location.coords).then(() => setPartyLoading(false))
   }
   const partySize = (party) => {
-    const attendance = Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).length
+    var attendance = Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).length
+    attendance = (5*attendance)
+    if (attendance > 0) attendance+=100
     //const attendance = 30
-    return 15*(attendance/2)
+    return attendance
   }
   const partyColor = (party) => {
     var color = "infoTransparent"

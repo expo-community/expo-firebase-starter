@@ -20,7 +20,7 @@ export default {
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: false,
-      buildNumber: "3",
+      buildNumber: "4",
       bundleIdentifier: "com.partynearyou.app"
     },
     extra: {
