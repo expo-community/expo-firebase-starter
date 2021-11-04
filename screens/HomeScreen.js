@@ -128,7 +128,7 @@ export const HomeScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={handleLogout} title="Logout" />
+        <Button onPress={() => navigation.navigate("Profile")} title="Profile" />
       ),
     });
   }, [navigation]);

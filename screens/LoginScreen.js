@@ -9,8 +9,10 @@ import { Images, Colors, auth } from '../config';
 import { useTogglePasswordVisibility } from '../hooks';
 import { loginValidationSchema } from '../utils';
 import IOSButton from '../components/IOSButton';
+import { useTheme } from '@react-navigation/native';
 
 export const LoginScreen = ({ navigation }) => {
+  const {colors} = useTheme()
   const [errorState, setErrorState] = useState('');
   const { passwordVisibility, handlePasswordVisibility, rightIcon } =
     useTogglePasswordVisibility();
@@ -22,8 +24,8 @@ export const LoginScreen = ({ navigation }) => {
     );
   };
   return (
-      <View style={styles.container}>
-        <KeyboardAwareScrollView enableOnAndroid={true}>
+      <View style={[styles.container, {backgroundColor: colors.background}]}>
+        <KeyboardAwareScrollView enableOnAndroid={true} style={{backgroundColor: colors.background}} showsVerticalScrollIndicator={false}>
           <Formik
             initialValues={{
               email: '',
@@ -117,17 +119,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: Colors.black,
     paddingTop: 20
-  },
-  footer: {
-    backgroundColor: Colors.white,
-    paddingHorizontal: 12,
-    paddingBottom: 48,
-    alignItems: 'center'
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: Colors.orange
   },
   button: {
     width: '100%',

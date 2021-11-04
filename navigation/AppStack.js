@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { HomeScreen, PartyModeScreen } from '../screens';
 import { PartyInfoScreen } from '../screens/PartyInfoScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export const AppStack = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{ headerLargeTitle: true, presentation: "modal" }}>
       <Stack.Screen name='Party Info' component={PartyInfoScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

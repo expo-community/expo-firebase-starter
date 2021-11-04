@@ -32,7 +32,7 @@ export const SignupScreen = ({ navigation }) => {
 
   return (
     <View isSafe style={styles.container}>
-      <KeyboardAwareScrollView enableOnAndroid={true}>
+      <KeyboardAwareScrollView enableOnAndroid={true} showsVerticalScrollIndicator={false}>
         {/* Formik Wrapper */}
         <Formik
           initialValues={{

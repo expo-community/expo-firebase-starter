@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'Party Near You',
+    name: 'Party',
     slug: 'party',
     privacy: 'unlisted',
     platforms: ['ios', 'android'],

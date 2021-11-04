@@ -3,20 +3,33 @@ import { View, StyleSheet, Button, Text, AsyncStorage } from 'react-native';
 import { signOut } from 'firebase/auth';
 import MapView, {Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
-import * as Linking from "expo-linking"
 
 import { auth } from '../config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
-import { useAtParty } from '../hooks';
+import { useparty } from '../hooks';
 import { attendParty, leaveParty, reportInfo } from '../config/firebase';
+import * as Linking from 'expo-linking';
+import { TextInput } from '../components';
 
-export const PartyModeScreen = ({navigation}) => {
+export const ProfileScreen = ({navigation, route}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
-  const atParty = useAtParty()
   const [number, setNumber] = useState("")
+
+  useEffect(() => {
+      if (number && number.length > 0) {
+        AsyncStorage.setItem("em#", number)
+      }
+      
+  }, [number])
+
+  useEffect(() => {
+    AsyncStorage.getItem("em#").then((num) => {if (num) {
+        console.log(num)
+        setNumber(num)}})
+  }, [navigation])
   // const [location, setLocation] = useState(null);
 
   /*useEffect(() => {
@@ -35,37 +48,31 @@ export const PartyModeScreen = ({navigation}) => {
       return unsubscribeLocationChange
     })();
   }, []);*/
-
-  useEffect(() => {
-    AsyncStorage.getItem("em#").then((num) => {if (num) {
-        console.log(num)
-        setNumber(num)}})
-  }, [navigation])
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={() => atParty ? leaveParty(atParty.id) : {}} title="End Party Mode" />
+        <Button onPress={() => navigation.goBack()} title="Done" />
       ),
     });
-  }, [navigation, atParty]);
-
-  
+  }, [navigation]);
   return (
     
     <View style={styles.container}>
-      {atParty && 
-        <View style={styles.infoView}>
-            <Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>
-            <Text style={{fontSize: 17, color: colors.success}}>{atParty.good ? atParty.good.length : 0}</Text>
-            <Text style={{fontSize: 17, color: colors.error}}>{atParty.bad ? atParty.bad.length : 0}</Text>
-            <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(atParty).filter(field => field.substring(0, 5) == "user_" && atParty[field]).length || 0}</Text>
-        </View>}
-          <View style={{margin: 32}}>
-            <IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(atParty.id, "police")}/>
-            <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(atParty.id, "good")} />
-            <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(atParty.id, "bad")} />
-            <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />
+        <View style={{marginHorizontal: 16}}>
+        <TextInput
+                  name='contact number'
+                  leftIconName='hospital-box'
+                  placeholder='Emergency Contact Number'
+                  autoCapitalize='none'
+                  autoCorrect={false}
+                  textContentType='telephoneNumber'
+                  value={number}
+                  onChangeText={(text) => setNumber(text)}
+                />
+                </View>
+          <View style={{marginHorizontal: 32}}>
+          
+            <IOSButton top style="filled" ap="primary" title="Logout" onPress={() => signOut(auth).catch(error => console.log('Error logging out: ', error))}/>
           </View>
     </View>
   );
