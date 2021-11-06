@@ -10,13 +10,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
 import { useAtParty } from '../hooks';
-import { attendParty, leaveParty, reportInfo } from '../config/firebase';
+import { attendParty, getUsers, leaveParty, reportInfo } from '../config/firebase';
+import { ScrollView } from 'react-native-gesture-handler';
+import Person from '../components/Person';
 
 export const PartyModeScreen = ({navigation}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
   const atParty = useAtParty()
   const [number, setNumber] = useState("")
+  const [people, setPeople] = useState([])
   // const [location, setLocation] = useState(null);
 
   /*useEffect(() => {
@@ -36,11 +39,7 @@ export const PartyModeScreen = ({navigation}) => {
     })();
   }, []);*/
 
-  useEffect(() => {
-    AsyncStorage.getItem("em#").then((num) => {if (num) {
-        console.log(num)
-        setNumber(num)}})
-  }, [navigation])
+  
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -50,10 +49,23 @@ export const PartyModeScreen = ({navigation}) => {
     });
   }, [navigation, atParty]);
 
+  useEffect(() => {
+    if (atParty) {
+      const peopleIDs = Object.keys(atParty).filter(field => field.substring(0, 5) == "user_" && atParty[field]).map((field) => field.substring(5))
+      getUsers(peopleIDs).then((peopleSnaps) => {
+        const docs = []
+        peopleSnaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
+        console.log(docs.length)
+        setPeople(docs)
+      })
+    }
+  }, [atParty])
+
   
   return (
     
     <View style={styles.container}>
+      <ScrollView>
       {atParty && 
         <View style={styles.infoView}>
             {/*<Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>*/}
@@ -67,6 +79,8 @@ export const PartyModeScreen = ({navigation}) => {
             <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(atParty.id, "bad")} />
             <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />
           </View>
+        {people.map(user => <Person user={user} />)}
+      </ScrollView>
     </View>
   );
 };
