@@ -9,41 +9,21 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
 import { useparty } from '../hooks';
-import { attendParty, leaveParty, reportInfo, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
+import { attendParty, leaveParty, reportInfo, searchUsername, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
 import * as Linking from 'expo-linking';
 import { TextInput } from '../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useUserData } from '../hooks/useUserData';
 
-export const ProfileScreen = ({navigation, route}) => {
+export const AddFriendScreen = ({navigation, route}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
-  const [number, setNumber] = useState("")
   const [username, setUserName] = useState("")
-  const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
   const [loaded, userData, filled] = useUserData()
   const [done, setDone] = useState(false)
+  const [query, setQuery] = useState([])
 
-  useEffect(() => {
-    if (userData) {
-        if (userData.username) setUserName(userData.username)
-        if (userData.name) setName(userData.name)
-    }
-  }, [userData])
-
-  useEffect(() => {
-      if (number && number.length > 0) {
-        AsyncStorage.setItem("em#", number)
-      }
-      
-  }, [number])
-
-  useEffect(() => {
-    AsyncStorage.getItem("em#").then((num) => {if (num) {
-        console.log(num)
-        setNumber(num)}})
-  }, [navigation])
 
   useEffect(() => {
     if (done) {
@@ -68,6 +48,19 @@ export const ProfileScreen = ({navigation, route}) => {
     setDone(false)
     
   }
+
+  useEffect(() => {
+    queryUsername()
+  }, [username])
+
+  const queryUsername = async () => {
+    const snaps = await searchUsername(username)
+    const docs = []
+    snaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
+    console.log(docs.length)
+    setQuery(docs)
+  }
+
   // const [location, setLocation] = useState(null);
 
   /*useEffect(() => {
@@ -89,45 +82,27 @@ export const ProfileScreen = ({navigation, route}) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={() => setDone(true)} title={loading?<ActivityIndicator /> : "Done"} />
+        <Button onPress={() => navigation.goBack()} title={loading?<ActivityIndicator /> : "Done"} />
       ),
-      headerLeft: () => (
-        <Button onPress={() => signOut(auth).catch(error => console.log('Error logging out: ', error))} title="Logout" />
-      ),
+      title: "Add Friend"
     });
   }, [navigation]);
   return (
     
     <View style={styles.container}>
         <ScrollView style={{marginHorizontal: 16}}>
-            <TextInput
-                    name='contact number'
-                    leftIconName='hospital-box'
-                    placeholder='Emergency Contact Number'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    textContentType='telephoneNumber'
-                    value={number}
-                    onChangeText={(text) => setNumber(text)}
-                    />
-            <TextInput
-                    name='username'
-                    leftIconName='account-search'
-                    placeholder='Username'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={username}
-                    onChangeText={(text) => setUserName(text)}
-                    />
-            <TextInput
-                    name='name'
-                    leftIconName='account'
-                    placeholder='Name'
-                    autoCorrect={false}
-                    value={name}
-                    onChangeText={(text) => setName(text)}
-                    />
-        
+                <TextInput
+                        name='contact number'
+                        leftIconName='account-search'
+                        placeholder='Enter Username'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        textContentType='telephoneNumber'
+                        value={username}
+                        onChangeText={(text) => setUserName(text)}
+                        >
+                </TextInput>
+            {query.map(q => <Text key={q.id}>{q.name}</Text>)}
         </ScrollView>
     </View>
   );

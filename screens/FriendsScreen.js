@@ -15,7 +15,7 @@ import { TextInput } from '../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useUserData } from '../hooks/useUserData';
 
-export const ProfileScreen = ({navigation, route}) => {
+export const FriendsScreen = ({navigation, route}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
   const [number, setNumber] = useState("")
@@ -92,7 +92,7 @@ export const ProfileScreen = ({navigation, route}) => {
         <Button onPress={() => setDone(true)} title={loading?<ActivityIndicator /> : "Done"} />
       ),
       headerLeft: () => (
-        <Button onPress={() => signOut(auth).catch(error => console.log('Error logging out: ', error))} title="Logout" />
+        <Button onPress={() => navigation.navigate("AddFriend")} title="Add Friend" />
       ),
     });
   }, [navigation]);

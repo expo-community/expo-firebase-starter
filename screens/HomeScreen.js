@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, Button, RefreshControlBase, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Button, RefreshControlBase, ActivityIndicator, Text, AsyncStorage } from 'react-native';
 import { signOut } from 'firebase/auth';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -8,8 +8,9 @@ import { auth } from '../config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
-import { createTestDoc, listenParties, distance, attendParty } from '../config/firebase';
+import { createTestDoc, listenParties, distance, attendParty, leaveParty, reportInfo } from '../config/firebase';
 import { FirebaseError } from '@firebase/util';
+import { useAtParty } from '../hooks';
 
 export const HomeScreen = ({navigation}) => {
   const {colors} = useTheme()
@@ -21,6 +22,8 @@ export const HomeScreen = ({navigation}) => {
   const [parties, setParties] = useState([])
   const [refreshing, setRefreshing] = useState(false)
   const [partyLoading, setPartyLoading] = useState(false)
+  const isAtParty = useAtParty()
+  const [number, setNumber] = useState("")
 
   useEffect(() => {
     (async () => {
@@ -100,6 +103,11 @@ export const HomeScreen = ({navigation}) => {
     setPartyLoading(true)
     attendParty(parties, location.coords).then(() => setPartyLoading(false))
   }
+  useEffect(() => {
+    AsyncStorage.getItem("em#").then((num) => {if (num) {
+        console.log(num)
+        setNumber(num)}})
+  }, [navigation])
   const partySize = (party) => {
     var attendance = Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).length
     attendance = (5*attendance)
@@ -132,8 +140,12 @@ export const HomeScreen = ({navigation}) => {
       headerRight: () => (
         <Button onPress={() => navigation.navigate("Profile")} title="Profile" />
       ),
+      headerLeft: () => (
+        <Button onPress={() => navigation.navigate("Friends")} title="Friends" />
+      ),
+      title: isAtParty ? "Party Mode" : "Party Near You"
     });
-  }, [navigation]);
+  }, [navigation, isAtParty]);
   return (
     <View style={styles.container}>
       {region&&
@@ -157,9 +169,25 @@ export const HomeScreen = ({navigation}) => {
           <View style={{width: 15, height: 15, backgroundColor: colors.primary, borderRadius: 10, borderWidth: 2, borderStyle: "solid", borderColor: "rgba(255, 255, 255, 0.8)"}} />
           </Marker>}
       </MapView>}
+
+
         
-      
-      {location && <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
+      {isAtParty && 
+      <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
+        <View style={styles.infoView}>
+            {/*<Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>*/}
+            <Text style={{fontSize: 17, color: colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text>
+            <Text style={{fontSize: 17, color: colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
+            <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).length || 0}</Text>
+        </View><View style={{margin: 32, marginTop: 16}}>
+            {/*<IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(isAtParty.id, "police")}/>*/}
+            <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(isAtParty.id, "good")} />
+            <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(isAtParty.id, "bad")} />
+            <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />
+            <IOSButton onPress={() => partyLoading ? {} : leaveParty(isAtParty.id)} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "Exit Party Mode"} top />
+          </View>
+          </View>}
+      {location && !isAtParty && <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
           <View style={{margin: 32}}>
             <IOSButton onPress={() => partyLoading ? {} : atParty()} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "At Party"} />
           </View>
@@ -186,5 +214,18 @@ const styles = StyleSheet.create({
   },
   btmContainer: {
     position: "absolute",
+  },
+  btmContainer: {
+    position: "absolute",
+  },
+  infoView: {
+      flexDirection: "row",
+      marginHorizontal: 32,
+      paddingLeft: 16,
+      paddingRight: 16,
+      paddingVertical: 8,
+      borderRadius: 10,
+      justifyContent: "space-around",
+      backgroundColor: "rgba(28, 28, 30, 0.8)"
   }
 });

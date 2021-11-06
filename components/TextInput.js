@@ -11,8 +11,10 @@ export const TextInput = ({
   leftIconName,
   rightIcon,
   handlePasswordVisibility,
+  children,
   ...otherProps
 }) => {
+
   return (
     <View
       style={{

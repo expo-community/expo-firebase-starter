@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, doc, addDoc, setDoc, updateDoc, where, arrayUnion } from "@firebase/firestore";
+import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, getDoc, doc, addDoc, setDoc, updateDoc, where, arrayUnion } from "@firebase/firestore";
 import Constants from 'expo-constants';
 const geofire = require("geofire-common")
 
@@ -29,6 +29,10 @@ initializeApp(firebaseConfig);
 // initialize auth
 const auth = getAuth();
 const firestore = getFirestore()
+
+export function userDataListener(callback) { 
+  return onSnapshot(doc(firestore, "users", auth.currentUser.uid), callback)
+}
 
 export function createTestDoc() {
   addDoc(collection(firestore, "parties"), {name: "test party"})
@@ -97,6 +101,35 @@ export function reportInfo(partyID, field) {
   const updateData = {}
   updateData[field] = arrayUnion(auth.currentUser.uid)
   return updateDoc(doc(firestore, "parties", partyID), updateData)
+}
+export function usernameLookUp(username) {
+  return getDocs(query(collection(firestore, "users"), where("username", "==", username)))
+}
+
+export async function usernameExists(username) {
+  const unSnaps = await usernameLookUp(username)
+  const unDocs = []
+  unSnaps.forEach((snap) => unDocs.push({...snap.data(), id: snap.id}))
+  if (unDocs.length == 0 || (unDocs.length == 1 && unDocs[0].id == auth.currentUser.uid)) return false
+  return true
+}
+
+export function updateUserData(userData, data) {
+  if (userData) return updateDoc(doc(firestore, "users", auth.currentUser.uid), data)
+  return setDoc(doc(firestore, "users", auth.currentUser.uid), data)
+}
+
+export function getUser(uid) {
+  return getDoc(doc(firestore, "users", uid))
+}
+
+export function getUsers(users) {
+  return Promise.all(users.map((user) => getUser(user)))
+}
+
+export function searchUsername(q) {
+  if (q && q.length > 0) return getDocs(query(collection(firestore, "users"), orderBy("username"), startAt(q), endAt(q + "\uf8ff")))
+  return []
 }
 
 export { auth, firestore };

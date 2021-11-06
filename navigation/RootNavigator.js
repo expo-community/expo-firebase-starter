@@ -3,12 +3,13 @@ import { DefaultTheme, NavigationContainer, DarkTheme } from '@react-navigation/
 import { onAuthStateChanged } from 'firebase/auth';
 
 import { AuthStack } from './AuthStack';
-import { AppStack, PartyStack } from './AppStack';
+import { AppStack, OnboardStack, PartyStack } from './AppStack';
 import { AuthenticatedUserContext } from '../providers';
 import { LoadingIndicator } from '../components';
 import { auth } from '../config';
 import { useColorScheme } from 'react-native';
 import { useAtParty } from '../hooks';
+import { useUserData } from '../hooks/useUserData';
 
 
 export const RootNavigator = () => {
@@ -16,6 +17,7 @@ export const RootNavigator = () => {
   const scheme = useColorScheme()
   const [isLoading, setIsLoading] = useState(true);
   const atParty = useAtParty()
+  const [loaded, userData, filled] = useUserData()
 
 
   useEffect(() => {
@@ -38,8 +40,12 @@ export const RootNavigator = () => {
     }
   }, [atParty])
 
+  useEffect(() => {
+    console.log(`loaded ${loaded} userData ${userData}`)
+  }, [loaded, userData])
 
-  if (isLoading) {
+
+  if (isLoading || !loaded) {
     return <LoadingIndicator />;
   }
 
@@ -65,10 +71,18 @@ export const RootNavigator = () => {
   }
 
   //scheme === 'dark' ? DarkTheme : DefaultTheme
-
-  return (
-    <NavigationContainer theme={theme}>
-      {user ? atParty ? <PartyStack /> : <AppStack /> : <AuthStack />}
-    </NavigationContainer>
-  );
+  
+  if (loaded && !filled) {
+    return (<NavigationContainer theme={theme}>
+      <OnboardStack />
+    </NavigationContainer>)
+  }
+  if (loaded && filled) {
+    return (
+      <NavigationContainer theme={theme}>
+        {user ? <AppStack /> : <AuthStack />}
+      </NavigationContainer>
+    );
+  }
+  
 };
