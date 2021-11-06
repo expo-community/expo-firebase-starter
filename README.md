@@ -17,7 +17,7 @@ Is a quicker way to start with Expo + Firebase (using JS SDK) projects. It inclu
 - custom hook to toggle password field visibility on a TextInput
 - handles server errors using Formik
 - Login, Signup & Password Reset form built using Formik & yup
-- show/hide Password Field's visibility 👁
+- show/hide Password Field's visibility
 - uses a custom Provider using Context API & Firebase's `onAuthStateChanged` handler to checks user's auth state with
 - handles Forgot Password Reset using Firebase email method
 - uses [Expo Vector Icons](https://icons.expo.fyi/)
