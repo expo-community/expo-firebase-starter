@@ -179,7 +179,7 @@ export const HomeScreen = ({navigation}) => {
             <Text style={{fontSize: 17, color: colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text>
             <Text style={{fontSize: 17, color: colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
             <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).length || 0}</Text>
-        </View><View style={{margin: 32, marginTop: 16}}>
+        </View><View style={{margin: 32, marginTop: 8}}>
             {/*<IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(isAtParty.id, "police")}/>*/}
             <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(isAtParty.id, "good")} />
             <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(isAtParty.id, "bad")} />

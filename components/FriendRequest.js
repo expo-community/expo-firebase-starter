@@ -5,7 +5,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Colors } from '../config';
 
-export const PersonRequest = (props) => {
+export const FriendRequest = (props) => {
     const { colors } = useTheme()
     const { user } = props
     console.log(JSON.stringify(colors))
@@ -21,6 +21,9 @@ export const PersonRequest = (props) => {
         left: {
             
         },
+        right: {
+            flexDirection: "row"
+        },
         text: {
             color: colors.text
         }
@@ -33,12 +36,13 @@ export const PersonRequest = (props) => {
             <Text style={[styles.text, {fontSize: 17, marginTop: 8}]}>{user.name}</Text>
         </View>
         <View style={styles.right}>
-            <Button title="Request" onPress={() => props.onRequest()}/>
+            <Button title="Accept" onPress={() => props.accept()}/>
+            <Button title="Decline" onPress={() => props.decline()}/>
         </View>
     </View>
   );
 };
 
-export default PersonRequest
+export default FriendRequest
 
 

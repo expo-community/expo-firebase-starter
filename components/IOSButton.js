@@ -51,7 +51,7 @@ export const IOSButton = (props) => {
     });
 
   return (
-    <TouchableWithoutFeedback style={[styles[props.style], {marginTop: props.top ? 16 : 0}]} onPress={props.onPress}>
+    <TouchableWithoutFeedback style={[styles[props.style], {marginTop: props.top ? 16 : 0, flex: 1}]} onPress={props.onPress}>
       <Text style={styles[`text_${props.style}`]}>{props.title}</Text>
     </TouchableWithoutFeedback>
   );

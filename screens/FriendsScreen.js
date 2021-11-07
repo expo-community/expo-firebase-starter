@@ -9,65 +9,40 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
 import { useparty } from '../hooks';
-import { attendParty, leaveParty, reportInfo, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
+import { acceptRequest, attendParty, declineRequest, getUsers, leaveParty, removeFriend, reportInfo, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
 import * as Linking from 'expo-linking';
 import { TextInput } from '../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useUserData } from '../hooks/useUserData';
+import Person from '../components/Person';
+import FriendRequest from '../components/FriendRequest';
+import Friend from '../components/Friend';
 
 export const FriendsScreen = ({navigation, route}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
-  const [number, setNumber] = useState("")
-  const [username, setUserName] = useState("")
-  const [name, setName] = useState("")
+  const [requests, setRequests] = useState([])
   const [loading, setLoading] = useState(false)
   const [loaded, userData, filled] = useUserData()
   const [done, setDone] = useState(false)
+  const [friends, setFriends] = useState([])
 
   useEffect(() => {
     if (userData) {
-        if (userData.username) setUserName(userData.username)
-        if (userData.name) setName(userData.name)
+      getUsers(userData.incomingRequests).then((snaps) => {
+        const docs = []
+        snaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
+        console.log(docs.length)
+        setRequests(docs)
+      })
+      getUsers(userData.friends).then((snaps) => {
+        const docs = []
+        snaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
+        console.log(docs.length)
+        setFriends(docs)
+      })
     }
   }, [userData])
-
-  useEffect(() => {
-      if (number && number.length > 0) {
-        AsyncStorage.setItem("em#", number)
-      }
-      
-  }, [number])
-
-  useEffect(() => {
-    AsyncStorage.getItem("em#").then((num) => {if (num) {
-        console.log(num)
-        setNumber(num)}})
-  }, [navigation])
-
-  useEffect(() => {
-    if (done) {
-        doneAction()
-    }
-  }, [done])
-
-  const doneAction = async () => {
-    setLoading(true)
-    const unExists = await usernameExists(username)
-    if (unExists) {
-        Alert.alert("Username Exists", "Please choose a different username")
-    } else {
-        await updateUserData(userData, {username: username, name: name})
-        try {
-            navigation.goBack()
-        } catch(err) {
-            console.log(err)
-        }
-    }
-    setLoading(false)
-    setDone(false)
-    
-  }
   // const [location, setLocation] = useState(null);
 
   /*useEffect(() => {
@@ -89,7 +64,7 @@ export const FriendsScreen = ({navigation, route}) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={() => setDone(true)} title={loading?<ActivityIndicator /> : "Done"} />
+        <Button onPress={() => navigation.goBack()} title={loading?<ActivityIndicator /> : "Done"} />
       ),
       headerLeft: () => (
         <Button onPress={() => navigation.navigate("AddFriend")} title="Add Friend" />
@@ -100,34 +75,10 @@ export const FriendsScreen = ({navigation, route}) => {
     
     <View style={styles.container}>
         <ScrollView style={{marginHorizontal: 16}}>
-            <TextInput
-                    name='contact number'
-                    leftIconName='hospital-box'
-                    placeholder='Emergency Contact Number'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    textContentType='telephoneNumber'
-                    value={number}
-                    onChangeText={(text) => setNumber(text)}
-                    />
-            <TextInput
-                    name='username'
-                    leftIconName='account-search'
-                    placeholder='Username'
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    value={username}
-                    onChangeText={(text) => setUserName(text)}
-                    />
-            <TextInput
-                    name='name'
-                    leftIconName='account'
-                    placeholder='Name'
-                    autoCorrect={false}
-                    value={name}
-                    onChangeText={(text) => setName(text)}
-                    />
-        
+          {requests.length > 0 && <Text style={{fontSize: 26, color: "#fff", fontWeight: "800"}}>Friend Requests</Text>}
+          {requests.map(q => <FriendRequest key={q.id} user={q} accept={() => acceptRequest(q.id)} decline={() => declineRequest(q.id)} />)}
+          {friends.length > 0 && requests.length > 0 && <Text style={{fontSize: 26, color: "#fff", fontWeight: "800"}}>Friends</Text>}
+          {friends.map(q => <Friend key={q.id} user={q} remove={() => removeFriend(q.id)} />)}
         </ScrollView>
     </View>
   );

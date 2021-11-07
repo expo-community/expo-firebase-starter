@@ -9,11 +9,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
 import { useparty } from '../hooks';
-import { attendParty, leaveParty, reportInfo, searchUsername, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
+import { attendParty, leaveParty, reportInfo, requestFriend, searchUsername, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
 import * as Linking from 'expo-linking';
 import { TextInput } from '../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useUserData } from '../hooks/useUserData';
+import { PersonRequest } from '../components/Person';
 
 export const AddFriendScreen = ({navigation, route}) => {
   const {colors} = useTheme()
@@ -87,6 +88,9 @@ export const AddFriendScreen = ({navigation, route}) => {
       title: "Add Friend"
     });
   }, [navigation]);
+  const doAddFriend = (user) => {
+    requestFriend(user.id).then(() => Alert.alert("Friend Request Sent", `${user.username} requested`))
+  }
   return (
     
     <View style={styles.container}>
@@ -102,7 +106,7 @@ export const AddFriendScreen = ({navigation, route}) => {
                         onChangeText={(text) => setUserName(text)}
                         >
                 </TextInput>
-            {query.map(q => <Text key={q.id}>{q.name}</Text>)}
+            {query.map(q => <PersonRequest user={q} onRequest={() => doAddFriend(q)}/>)}
         </ScrollView>
     </View>
   );

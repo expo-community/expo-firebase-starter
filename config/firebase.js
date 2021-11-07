@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, getDoc, doc, addDoc, setDoc, updateDoc, where, arrayUnion } from "@firebase/firestore";
+import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, getDoc, doc, addDoc, setDoc, updateDoc, where, arrayUnion, arrayRemove } from "@firebase/firestore";
 import Constants from 'expo-constants';
 const geofire = require("geofire-common")
 
@@ -130,6 +130,49 @@ export function getUsers(users) {
 export function searchUsername(q) {
   if (q && q.length > 0) return getDocs(query(collection(firestore, "users"), orderBy("username"), startAt(q), endAt(q + "\uf8ff")))
   return []
+}
+export function requestFriend(uid) {
+  return new Promise(async (resolve, reject) => {
+    const modFriend = {incomingRequests: arrayUnion(auth.currentUser.uid)}
+    await updateDoc(doc(firestore, "users", uid), modFriend)
+
+    const modSelf = {outgoingRequests: arrayUnion(uid)}
+    await updateDoc(doc(firestore, "users", auth.currentUser.uid), modSelf)
+    resolve()
+  })
+}
+
+export function declineRequest(uid) {
+  return new Promise(async (resolve, reject) => {
+    const modFriend = {incomingRequests: arrayRemove(auth.currentUser.uid)}
+    await updateDoc(doc(firestore, "users", uid), modFriend)
+
+    const modSelf = {outgoingRequests: arrayRemove(uid)}
+    await updateDoc(doc(firestore, "users", auth.currentUser.uid), modSelf)
+    resolve()
+  })
+}
+
+export function removeFriend(uid) {
+  return new Promise(async (resolve, reject) => {
+    const modFriend = {friends: arrayRemove(auth.currentUser.uid)}
+    await updateDoc(doc(firestore, "users", uid), modFriend)
+
+    const modSelf = {friends: arrayRemove(uid)}
+    await updateDoc(doc(firestore, "users", auth.currentUser.uid), modSelf)
+    resolve()
+  })
+}
+
+export function acceptRequest(uid) {
+  return new Promise(async (resolve, reject) => {
+    const modFriend = {friends: arrayUnion(auth.currentUser.uid), incomingRequests: arrayRemove(auth.currentUser.uid)}
+    await updateDoc(doc(firestore, "users", uid), modFriend)
+
+    const modSelf = {friends: arrayUnion(uid), outgoingRequests: arrayRemove(uid)}
+    await updateDoc(doc(firestore, "users", auth.currentUser.uid), modSelf)
+    resolve()
+  })
 }
 
 export { auth, firestore };
