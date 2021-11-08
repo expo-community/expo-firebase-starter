@@ -1,4 +1,4 @@
-# expo-firebase-starter 🔥
+# expo-firebase-starter
 
 <p>
   <!-- iOS -->
@@ -104,7 +104,7 @@ Main screens:
 
 ![Validation on Signup screens](https://i.imgur.com/DG0wTjG.png)
 
-## ⚠️ Please Note
+## CAUTION Please Note
 
 Expo uses Firebase Web SDK and does not support all Firebase services such as phone auth. If you are looking forward to use those services, please use `react-native-firebase` in a Expo bare project, or an [Expo custom dev client](https://blog.expo.dev/introducing-custom-development-clients-5a2c79a9ddf8) or a plain React Native project.
 
@@ -112,4 +112,4 @@ Expo uses Firebase Web SDK and does not support all Firebase services such as ph
 
 ---
 
-<strong>Built with 💜 by [@amanhimself](https://twitter.com/amanhimself)</strong>
+<strong>Built with love by [@amanhimself](https://twitter.com/amanhimself)</strong>
