@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, getDoc, doc, addDoc, setDoc, updateDoc, where, arrayUnion, arrayRemove } from "@firebase/firestore";
+import { query, collection, endAt, orderBy, startAt, onSnapshot, getFirestore, getDocs, getDoc, doc, addDoc, setDoc, updateDoc, where, arrayUnion, arrayRemove, increment } from "@firebase/firestore";
 import Constants from 'expo-constants';
 const geofire = require("geofire-common")
 
@@ -64,17 +64,19 @@ export function listenParties(coords, radius) {
   return Promise.all(boundPromises)
 }
 
-export function attendParty(parties, coords) {
+export async function attendParty(parties, coords) {
   const uid = auth.currentUser.uid
   if (parties.length > 0 && parties[0].distance < 0.1) {
     const update = {}
     update["user_"+uid] = true
+    if (!("user_"+uid in parties[0])) updateUserData(true, {score: increment(1)})
     return updateDoc(doc(firestore, "parties", parties[0].id), update)
   } else {
     return new Promise((resolve, reject) => {
       const geohash = geofire.geohashForLocation([coords.latitude, coords.longitude])
       const newDoc = {geohash, loc: coords}
       newDoc["user_"+uid] = true
+      updateUserData(true, {score: increment(1)})
       addDoc(collection(firestore, "parties"), newDoc).then(() => resolve())
       
     })
@@ -166,10 +168,10 @@ export function removeFriend(uid) {
 
 export function acceptRequest(uid) {
   return new Promise(async (resolve, reject) => {
-    const modFriend = {friends: arrayUnion(auth.currentUser.uid), incomingRequests: arrayRemove(auth.currentUser.uid)}
+    const modFriend = {friends: arrayUnion(auth.currentUser.uid), outgoingRequests: arrayRemove(auth.currentUser.uid)}
     await updateDoc(doc(firestore, "users", uid), modFriend)
 
-    const modSelf = {friends: arrayUnion(uid), outgoingRequests: arrayRemove(uid)}
+    const modSelf = {friends: arrayUnion(uid), incomingRequests: arrayRemove(uid)}
     await updateDoc(doc(firestore, "users", auth.currentUser.uid), modSelf)
     resolve()
   })

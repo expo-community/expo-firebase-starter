@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, Button, RefreshControlBase, ActivityIndicator, Text, AsyncStorage } from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import { View, StyleSheet, Button, RefreshControlBase, ActivityIndicator, Text, AsyncStorage, Animated } from 'react-native';
 import { signOut } from 'firebase/auth';
 import MapView, {Circle, Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -8,9 +8,12 @@ import { auth } from '../config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
-import { createTestDoc, listenParties, distance, attendParty, leaveParty, reportInfo } from '../config/firebase';
+import { createTestDoc, listenParties, distance, attendParty, leaveParty, reportInfo, userDataListener } from '../config/firebase';
 import { FirebaseError } from '@firebase/util';
 import { useAtParty } from '../hooks';
+import { Icon } from '../components';
+import { useUserData } from '../hooks/useUserData';
+import * as Linking from "expo-linking"
 
 export const HomeScreen = ({navigation}) => {
   const {colors} = useTheme()
@@ -24,6 +27,9 @@ export const HomeScreen = ({navigation}) => {
   const [partyLoading, setPartyLoading] = useState(false)
   const isAtParty = useAtParty()
   const [number, setNumber] = useState("")
+  const [loaded, userData, filled] = useUserData()
+  const [panelOpen, setPanelOpen] = useState(true)
+  const panelAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     (async () => {
@@ -34,14 +40,20 @@ export const HomeScreen = ({navigation}) => {
       }
 
       let unsubscribeLocationChange = await Location.watchPositionAsync({}, (loc) => {
+        setRegion({
+          latitude: loc.coords.latitude,
+          longitude: loc.coords.longitude,
+          latitudeDelta: region.latitudeDelta,
+          longitudeDelta: region.longitudeDelta,
+        })
         if (centered || location == null) {
-          setRegion({
+          console.log("changing display region")
+          setDisplayRegion({
             latitude: loc.coords.latitude,
             longitude: loc.coords.longitude,
             latitudeDelta: 0.025,
             longitudeDelta: 0.025,
           })
-          
         }
         if (location == null) setCentered(true)
         setLocation(loc);
@@ -64,8 +76,7 @@ export const HomeScreen = ({navigation}) => {
       var docs = []
       partyPromises.forEach((bound) => bound.forEach(party => docs.push({...party.data(), id: party.id})))
       docs = docs.map(doc => ({...doc, distance: distance(doc.loc, location.coords), radius: partySize(doc), color: partyColor(doc)})).sort((a, b) => a.distance - b.distance)
-
-      console.log(JSON.stringify(docs[0]))
+      //console.log(JSON.stringify(docs[0]))
       setRefreshing(false)
       setParties(docs)
     })
@@ -101,7 +112,7 @@ export const HomeScreen = ({navigation}) => {
 
   const atParty = () => {
     setPartyLoading(true)
-    attendParty(parties, location.coords).then(() => setPartyLoading(false))
+    attendParty(parties, location.coords).then(() => setPartyLoading(false)).catch(() => setPartyLoading(false))
   }
   useEffect(() => {
     AsyncStorage.getItem("em#").then((num) => {if (num) {
@@ -135,6 +146,29 @@ export const HomeScreen = ({navigation}) => {
     }
 
   }
+  useEffect(() => {
+    if (isAtParty) setPanelOpen(true)
+    else setPanelOpen(false)
+  }, [isAtParty])
+  useEffect(() => {
+    if (panelOpen) {
+      showPartyPanel()
+    } else hidePartyPanel()
+  }, [panelOpen])
+  const hidePartyPanel = () => {
+    Animated.timing(panelAnim, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: false
+    }).start();
+  }
+  const showPartyPanel = () => {
+    Animated.timing(panelAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: false
+    }).start();
+  }
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -160,7 +194,7 @@ export const HomeScreen = ({navigation}) => {
         
         {/*parties.map((party) => <Marker key={party.id} coordinate={{latitude: party.loc.latitude, longitude: party.loc.longitude}}><View style={{width: partySize(party), height: partySize(party), backgroundColor: colors.infoTransparent, borderRadius: partySize(party)/2, borderWidth: 2, borderStyle: "solid", borderColor: "#fff"}} />
           </Marker>)*/}
-          {parties.map((party) => <Circle fillColor={colors[party.color]} strokeColor="#fff" key={party.id} center={{latitude: party.loc.latitude, longitude: party.loc.longitude}} radius={party.radius}></Circle>)}
+          {parties.filter(doc => Object.keys(doc).filter(field => field.substring(0, 5) == "user_" && doc[field]).map((field) => field.substring(5)).some(r=> userData.friends.indexOf(r) >= 0)).map((party) => <Circle fillColor={colors[party.color]} strokeColor="#fff" key={party.id} center={{latitude: party.loc.latitude, longitude: party.loc.longitude}} radius={party.radius}></Circle>)}
 
           {location&&<Marker
         coordinate={location.coords}
@@ -175,18 +209,27 @@ export const HomeScreen = ({navigation}) => {
       {isAtParty && 
       <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
         <View style={styles.infoView}>
-            {/*<Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>*/}
-            <Text style={{fontSize: 17, color: colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text>
-            <Text style={{fontSize: 17, color: colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
-            <Text style={{fontSize: 17, color: "#fff"}}>{Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).length || 0}</Text>
-        </View><View style={{margin: 32, marginTop: 8}}>
-            {/*<IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(isAtParty.id, "police")}/>*/}
-            <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(isAtParty.id, "good")} />
-            <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(isAtParty.id, "bad")} />
-            <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />
-            <IOSButton onPress={() => partyLoading ? {} : leaveParty(isAtParty.id)} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "Exit Party Mode"} top />
+          {/*<Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>*/}
+          <View style={{flexDirection: 'row', alignItems: "center"}}>
+            <Icon name="thumb-up" size={20} color={colors.success}/>
+            <Text style={{marginLeft: 4, fontSize: 17, color: colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text></View>
+          <View style={{flexDirection: 'row', alignItems: "center"}}>
+            <Icon name="thumb-down" size={20} color={colors.error}/>
+            <Text style={{marginLeft: 4, fontSize: 17, color: colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
           </View>
-          </View>}
+          <View style={{flexDirection: 'row', alignItems: "center"}}>
+            <Icon name="account" size={20} color={colors.text}/>
+            <Text style={{marginLeft: 4, fontSize: 17, color: "#fff"}}>{Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).length || 0}</Text>
+          </View>
+        </View>
+        <View style={{margin: 32, marginTop: 8}}>
+          {/*<IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(isAtParty.id, "police")}/>*/}
+          <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(isAtParty.id, "good")} />
+          <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(isAtParty.id, "bad")} />
+          <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />
+          <IOSButton onPress={() => partyLoading ? {} : leaveParty(isAtParty.id)} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "Exit Party Mode"} top />
+        </View>
+      </View>}
       {location && !isAtParty && <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
           <View style={{margin: 32}}>
             <IOSButton onPress={() => partyLoading ? {} : atParty()} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "At Party"} />

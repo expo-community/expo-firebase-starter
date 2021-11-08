@@ -106,7 +106,7 @@ export const AddFriendScreen = ({navigation, route}) => {
                         onChangeText={(text) => setUserName(text)}
                         >
                 </TextInput>
-            {query.map(q => <PersonRequest user={q} onRequest={() => doAddFriend(q)}/>)}
+            {query.map(q => <PersonRequest key={q.id} user={q} onRequest={() => doAddFriend(q)}/>)}
         </ScrollView>
     </View>
   );

@@ -16,13 +16,24 @@ export const Friend = (props) => {
             flexDirection: "row",
             marginVertical: 8,
             justifyContent: "space-between",
-            alignItems: "center"
+            alignItems: "center",
+            borderWidth: props.border ? 1 : 0,
+            borderColor: colors.primary,
+            borderStyle: "solid",
+            borderRadius: 10,
+            padding: props.border ? 8 : 0
+        },
+        score: {
+            flex: 1,
+            color: colors.text,
+            fontSize: 20,
+            fontWeight:"bold"
         },
         left: {
-            
+            flex: 3
         },
         right: {
-            flexDirection: "row"
+            flexDirection: "row",
         },
         text: {
             color: colors.text
@@ -31,6 +42,7 @@ export const Friend = (props) => {
 
   return (
     <View style={styles.container}>
+        <Text style={styles.score}>{user.score || 0}</Text>
         <View style={styles.left}>
             <Text style={[styles.text, {fontSize: 20, fontWeight: "700"}]}>{user.username}</Text>
             <Text style={[styles.text, {fontSize: 17, marginTop: 8}]}>{user.name}</Text>

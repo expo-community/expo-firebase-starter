@@ -71,13 +71,13 @@ export const RootNavigator = () => {
   }
 
   //scheme === 'dark' ? DarkTheme : DefaultTheme
+  console.log(`${user} ${loaded} ${filled}`)
   
-  if (loaded && !filled) {
+  if (user && loaded && !filled) {
     return (<NavigationContainer theme={theme}>
       <OnboardStack />
     </NavigationContainer>)
-  }
-  if (loaded && filled) {
+  } else if (loaded) {
     return (
       <NavigationContainer theme={theme}>
         {user ? <AppStack /> : <AuthStack />}

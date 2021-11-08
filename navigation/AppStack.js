@@ -6,6 +6,7 @@ import { PartyInfoScreen } from '../screens/PartyInfoScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { FriendsScreen } from '../screens/FriendsScreen';
 import { AddFriendScreen } from '../screens/AddFriendScreen';
+import { PartyPeopleScreen } from '../screens/PartyPeopleScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export const AppStack = () => {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Friends" component={FriendsScreen} />
       <Stack.Screen name="AddFriend" component={AddFriendScreen} />
+      <Stack.Screen name="PartyPeople" component={PartyPeopleScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

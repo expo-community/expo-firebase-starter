@@ -33,7 +33,7 @@ export const FriendRequest = (props) => {
     <View style={styles.container}>
         <View style={styles.left}>
             <Text style={[styles.text, {fontSize: 20, fontWeight: "700"}]}>{user.username}</Text>
-            <Text style={[styles.text, {fontSize: 17, marginTop: 8}]}>{user.name}</Text>
+            <Text style={[styles.text, {fontSize: 17, marginTop: 8}]}>{user.name} {user.score || 0}</Text>
         </View>
         <View style={styles.right}>
             <Button title="Accept" onPress={() => props.accept()}/>

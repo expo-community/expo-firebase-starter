@@ -13,20 +13,22 @@ export const useUserData = () => {
     // function that toggles password visibility on a TextInput component on a confirm password field
     console.log("userData hook")
     if (user) {
+        setLoaded(false)
         const unsubscribe = userDataListener((snapshot) => {
             const doc = {...snapshot.data(), id: snapshot.id}
             if (doc && snapshot.data) {
                 setCurrentUser(doc)
                 if (doc.username && doc.name) setFilled(true)
-                setLoaded(true)
                 console.log("userData: "+JSON.stringify(doc))
+                setLoaded(true)
             } else {
                 if (currentUser) setLoaded(false)
                 setCurrentUser(null)
+                setLoaded(true)
             }
         })
         return unsubscribe
-    }
+    } else setLoaded(true)
     
   }, [user])
 

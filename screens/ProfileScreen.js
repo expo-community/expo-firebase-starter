@@ -57,7 +57,7 @@ export const ProfileScreen = ({navigation, route}) => {
     if (unExists) {
         Alert.alert("Username Exists", "Please choose a different username")
     } else {
-        await updateUserData(userData, {username: username, name: name})
+        await updateUserData(userData && Object.keys(userData).filter(key => key != "id").length > 0, {username: username, name: name})
         try {
             navigation.goBack()
         } catch(err) {

@@ -9,41 +9,65 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
 import { useAtParty, useparty } from '../hooks';
-import { acceptRequest, attendParty, declineRequest, getUsers, leaveParty, removeFriend, reportInfo, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
+import { attendParty, getUsers, leaveParty, removeFriend, reportInfo, requestFriend, searchUsername, updateUserData, usernameExists, usernameLookUp } from '../config/firebase';
 import * as Linking from 'expo-linking';
 import { TextInput } from '../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useUserData } from '../hooks/useUserData';
-import Person from '../components/Person';
-import FriendRequest from '../components/FriendRequest';
+import { PersonRequest } from '../components/Person';
 import Friend from '../components/Friend';
 
-export const FriendsScreen = ({navigation, route}) => {
+export const PartyPeopleScreen = ({navigation, route}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
-  const [requests, setRequests] = useState([])
+  const [username, setUserName] = useState("")
   const [loading, setLoading] = useState(false)
   const [loaded, userData, filled] = useUserData()
   const [done, setDone] = useState(false)
-  const [friends, setFriends] = useState([])
+  const [query, setQuery] = useState([])
   const isAtParty = useAtParty()
 
+
   useEffect(() => {
-    if (userData) {
-      getUsers(userData.incomingRequests || []).then((snaps) => {
-        const docs = []
-        snaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
-        console.log(docs.length)
-        setRequests(docs)
-      })
-      getUsers(userData.friends || []).then((snaps) => {
-        const docs = []
-        snaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
-        console.log(docs.length)
-        setFriends(docs)
-      })
+    if (done) {
+        doneAction()
     }
-  }, [userData])
+  }, [done])
+
+  const doneAction = async () => {
+    setLoading(true)
+    const unExists = await usernameExists(username)
+    if (unExists) {
+        Alert.alert("Username Exists", "Please choose a different username")
+    } else {
+        await updateUserData(userData, {username: username, name: name})
+        try {
+            navigation.goBack()
+        } catch(err) {
+            console.log(err)
+        }
+    }
+    setLoading(false)
+    setDone(false)
+    
+  }
+
+  useEffect(() => {
+    if (isAtParty) {
+      queryUsers()
+    }
+    
+  }, [isAtParty, userData])
+
+  const queryUsers = async () => {
+    const userIds = Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).map((field) => field.substring(5))
+    const snaps = await getUsers(userIds)
+    const docs = []
+    snaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
+    console.log(docs.length)
+    setQuery(docs)
+  }
+
   // const [location, setLocation] = useState(null);
 
   /*useEffect(() => {
@@ -67,20 +91,17 @@ export const FriendsScreen = ({navigation, route}) => {
       headerRight: () => (
         <Button onPress={() => navigation.goBack()} title={loading?<ActivityIndicator /> : "Done"} />
       ),
-      headerLeft: () => (
-        <Button onPress={() => navigation.navigate("AddFriend")} title="Add Friend" />
-      ),
+      title: "People At Party"
     });
   }, [navigation]);
+  const doAddFriend = (user) => {
+    requestFriend(user.id).then(() => Alert.alert("Friend Request Sent", `${user.username} requested`))
+  }
   return (
     
     <View style={styles.container}>
         <ScrollView style={{marginHorizontal: 16}}>
-          {isAtParty && <IOSButton style="filled" ap="primary" title="People At Party" onPress={() => navigation.navigate("PartyPeople")} />}
-          {requests.length > 0 && <Text style={{fontSize: 26, color: "#fff", fontWeight: "800"}}>Friend Requests</Text>}
-          {requests.map(q => <FriendRequest key={q.id} user={q} accept={() => acceptRequest(q.id)} decline={() => declineRequest(q.id)} />)}
-          {friends.length > 0 && requests.length > 0 && <Text style={{fontSize: 26, color: "#fff", fontWeight: "800"}}>Friends</Text>}
-          {friends.map(q => <Friend key={q.id} user={q} remove={() => removeFriend(q.id)} />)}
+            {query.map(q => userData.friends && userData.friends.indexOf(q.id) !== -1 ? <Friend key={q.id} user={q} remove={() => removeFriend(q.id)} border /> : <PersonRequest key={q.id} user={q} onRequest={() => doAddFriend(q)} />)}
         </ScrollView>
     </View>
   );
