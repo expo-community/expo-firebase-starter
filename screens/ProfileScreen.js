@@ -14,6 +14,7 @@ import * as Linking from 'expo-linking';
 import { TextInput } from '../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useUserData } from '../hooks/useUserData';
+import PartyIcon, { PartyIconMed } from '../components/PartyIcon';
 
 export const ProfileScreen = ({navigation, route}) => {
   const {colors} = useTheme()
@@ -127,7 +128,7 @@ export const ProfileScreen = ({navigation, route}) => {
                     value={name}
                     onChangeText={(text) => setName(text)}
                     />
-        
+{userData && <View style={{flexDirection: "row", alignItems: "center", width: "100%", justifyContent: "center"}}><View style={{width: 30, height: 30}}><PartyIconMed /></View><Text style={{alignItems: "center", color: colors.text, fontSize: 28, fontWeight: "bold"}}> {userData.score || 0}</Text></View>}
         </ScrollView>
     </View>
   );

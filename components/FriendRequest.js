@@ -4,6 +4,7 @@ import { Pressable, Text, StyleSheet, View, Button } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Colors } from '../config';
+import PartyIcon from './PartyIcon';
 
 export const FriendRequest = (props) => {
     const { colors } = useTheme()
@@ -33,7 +34,7 @@ export const FriendRequest = (props) => {
     <View style={styles.container}>
         <View style={styles.left}>
             <Text style={[styles.text, {fontSize: 20, fontWeight: "700"}]}>{user.username}</Text>
-            <Text style={[styles.text, {fontSize: 17, marginTop: 8}]}>{user.name} {user.score || 0}</Text>
+            <Text style={[styles.text, {fontSize: 17, marginTop: 8}]}>{user.name}  <View style={{width: 20, height: 20}}><PartyIcon /></View>{user.score || 0}</Text>
         </View>
         <View style={styles.right}>
             <Button title="Accept" onPress={() => props.accept()}/>

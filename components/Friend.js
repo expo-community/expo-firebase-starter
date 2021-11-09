@@ -4,6 +4,7 @@ import { Pressable, Text, StyleSheet, View, Button } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { Colors } from '../config';
+import PartyIcon from './PartyIcon';
 
 export const Friend = (props) => {
     const { colors } = useTheme()
@@ -30,7 +31,7 @@ export const Friend = (props) => {
             fontWeight:"bold"
         },
         left: {
-            flex: 3
+            flex: 2
         },
         right: {
             flexDirection: "row",
@@ -42,7 +43,7 @@ export const Friend = (props) => {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.score}>{user.score || 0}</Text>
+        <Text style={styles.score}><View style={{width: 20, height: 20}}><PartyIcon /></View> {user.score || 0}</Text>
         <View style={styles.left}>
             <Text style={[styles.text, {fontSize: 20, fontWeight: "700"}]}>{user.username}</Text>
             <Text style={[styles.text, {fontSize: 17, marginTop: 8}]}>{user.name}</Text>
