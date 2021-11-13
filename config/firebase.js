@@ -102,6 +102,15 @@ export function partiesListener (uid, callback) {
 export function reportInfo(partyID, field) {
   const updateData = {}
   updateData[field] = arrayUnion(auth.currentUser.uid)
+  const actions = []
+  if (field == "good") actions.push(unreportInfo(partyID, "bad"))
+  else if (field == "bad") actions.push(unreportInfo(partyID, "good"))
+  actions.push(updateDoc(doc(firestore, "parties", partyID), updateData))
+  return Promise.all(actions)
+}
+export function unreportInfo(partyID, field) {
+  const updateData = {}
+  updateData[field] = arrayRemove(auth.currentUser.uid)
   return updateDoc(doc(firestore, "parties", partyID), updateData)
 }
 export function usernameLookUp(username) {

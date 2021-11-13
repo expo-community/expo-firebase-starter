@@ -78,11 +78,11 @@ export const PartyInfoScreen = ({navigation, route}) => {
         <View style={styles.infoView}>
             {/*<Text style={{fontSize: 17, color: colors.warning}}>{party.police ? party.police.length : 0}</Text>*/}
             <View style={{flexDirection: 'row', alignItems: "center"}}>
-              <Icon name="thumb-up" size={20} color={colors.success}/>
-              <Text style={{marginLeft: 4, fontSize: 17, color: colors.success}}>{party.good ? party.good.length : 0}</Text></View>
+              <Icon name="thumb-up" size={20} color={userData && party.good && party.good.indexOf(userData.id) == -1 ? colors.text : colors.success}/>
+              <Text style={{marginLeft: 4, fontSize: 17, color: userData && party.good && party.good.indexOf(userData.id) == -1 ? colors.text : colors.success}}>{party.good ? party.good.length : 0}</Text></View>
             <View style={{flexDirection: 'row', alignItems: "center"}}>
-              <Icon name="thumb-down" size={20} color={colors.error}/>
-              <Text style={{marginLeft: 4, fontSize: 17, color: colors.error}}>{party.bad ? party.bad.length : 0}</Text>
+              <Icon name="thumb-down" size={20} color={userData && party.bad && party.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}/>
+              <Text style={{marginLeft: 4, fontSize: 17, color: userData && party.bad && party.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}}>{party.bad ? party.bad.length : 0}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: "center"}}>
               <Icon name="account" size={20} color={colors.text}/>

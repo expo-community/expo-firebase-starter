@@ -23,6 +23,23 @@ export const IOSButton = (props) => {
         alignItems: "center",
         justifyContent: "center"
       },
+      text_outline: {
+        fontWeight: "bold",
+        fontSize: 17,
+        color: theme.colors[props.ap],
+        margin: 12,
+      },
+      outline: {
+        backgroundColor: "transparent",
+        borderRadius: 10,
+        height: 44,
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderColor: theme.colors[props.ap]
+      },
       text_shadow: {
         fontSize: 17,
         color: theme.colors[props.ap],

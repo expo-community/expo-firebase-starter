@@ -16,7 +16,7 @@ export const useUserData = () => {
         setLoaded(false)
         const unsubscribe = userDataListener((snapshot) => {
             const doc = {...snapshot.data(), id: snapshot.id}
-            if (doc && snapshot.data) {
+            if (doc && snapshot.data()) {
                 setCurrentUser(doc)
                 if (doc.username && doc.name) setFilled(true)
                 console.log("userData: "+JSON.stringify(doc))

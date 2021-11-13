@@ -8,7 +8,7 @@ import { auth } from '../config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
-import { createTestDoc, listenParties, distance, attendParty, leaveParty, reportInfo, userDataListener } from '../config/firebase';
+import { createTestDoc, listenParties, distance, attendParty, leaveParty, reportInfo, userDataListener, unreportInfo } from '../config/firebase';
 import { FirebaseError } from '@firebase/util';
 import { useAtParty } from '../hooks';
 import { Icon } from '../components';
@@ -19,8 +19,8 @@ export const HomeScreen = ({navigation}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
   const [location, setLocation] = useState(null);
-  const [region, setRegion] = useState(false);
-  const [displayRegion, setDisplayRegion] = useState(null)
+  const [region, setRegion] = useState(null);
+  var displayRegion = null
   const [centered, setCentered] = useState(true)
   const [parties, setParties] = useState([])
   const [refreshing, setRefreshing] = useState(false)
@@ -30,6 +30,8 @@ export const HomeScreen = ({navigation}) => {
   const [loaded, userData, filled] = useUserData()
   const [panelOpen, setPanelOpen] = useState(true)
   const panelAnim = useRef(new Animated.Value(0)).current;
+  const mapRef = useRef()
+  const [animatedRegionChange, setAnimatedRegionChange] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -43,19 +45,27 @@ export const HomeScreen = ({navigation}) => {
         setRegion({
           latitude: loc.coords.latitude,
           longitude: loc.coords.longitude,
-          latitudeDelta: region.latitudeDelta,
-          longitudeDelta: region.longitudeDelta,
+          latitudeDelta: region ? region.latitudeDelta||0.025:0.025,
+          longitudeDelta: region ? region.longitudeDelta||0.025:0.025,
         })
         if (centered || location == null) {
           console.log("changing display region")
-          setDisplayRegion({
+          
+          /*if (displayRegion == null) displayRegion = new MapView.AnimatedRegion({
+            latitude: loc.coords.latitude,
+            longitude: loc.coords.longitude,
+            latitudeDelta: region.latitudeDelta,
+            longitudeDelta: region.longitudeDelta,
+          })*
+          /*displayRegion.timing({...{
             latitude: loc.coords.latitude,
             longitude: loc.coords.longitude,
             latitudeDelta: 0.025,
             longitudeDelta: 0.025,
-          })
+          }, duration: 2000 })
+          .start();*/
         }
-        if (location == null) setCentered(true)
+        if (location == null) setAnimatedRegionChange(true)
         setLocation(loc);
       });
       return unsubscribeLocationChange
@@ -83,25 +93,82 @@ export const HomeScreen = ({navigation}) => {
   }
 
   const reCenter = () => {
-    setRegion({
+    
+    /*displayRegion.timing({...{
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.025,
       longitudeDelta: 0.025,
-    })
-    setDisplayRegion({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.025,
-      longitudeDelta: 0.025,
-    })
+    }, duration: 2000 })
+    .start();*/
     setCentered(true)
   }
 
+  useEffect(() => {
+    if (location && centered && isAtParty && panelOpen) {
+      setAnimatedRegionChange(true)
+      setRegion({
+        latitude: location.coords.latitude-0.025/5,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.025,
+        longitudeDelta: 0.025,
+      })
+      mapRef.current.animateToRegion({
+        latitude: location.coords.latitude-0.025/5,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.025,
+        longitudeDelta: 0.025,
+      }, 500)
+      
+    } else if (location && centered && isAtParty && !panelOpen) {
+      console.log("close panel map animation")
+      setAnimatedRegionChange(true)
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.025,
+        longitudeDelta: 0.025,
+      })
+      mapRef.current.animateToRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.025,
+        longitudeDelta: 0.025,
+      }, 500)
+    } else if (location && centered && !isAtParty) {
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.025,
+        longitudeDelta: 0.025,
+      })
+      setAnimatedRegionChange(true)
+      mapRef.current.animateToRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.025,
+        longitudeDelta: 0.025,
+      }, 500)
+    }
+    
+  }, [centered, isAtParty, panelOpen, location])
+
+  const sameCoords = (r) => {
+    if (!location) return true
+    const tol = 0.0000001
+    return (Math.abs(r.latitude-location.coords.latitude) < tol || Math.abs(r.latitude-(location.coords.latitude-0.025/5))<tol) && Math.abs(r.longitude-location.coords.longitude)<tol
+  }
+
   const regionChange = (region) => {
-    if (centered && location) {
-      setDisplayRegion(null)
+    console.log(`loc: ${location} !sameCoords: ${!sameCoords(region)} !animated: ${!animatedRegionChange} && !refresh: ${!refreshing}`)
+    if (centered && location && !sameCoords(region) && !animatedRegionChange && !refreshing) {
+      
+      //setDisplayRegion(null)
       setCentered(false)
+    }
+    if (animatedRegionChange) {
+      setAnimatedRegionChange(false)
+      setCentered(true)
     }
     setRegion(region)
   }
@@ -149,6 +216,7 @@ export const HomeScreen = ({navigation}) => {
   useEffect(() => {
     if (isAtParty) setPanelOpen(true)
     else setPanelOpen(false)
+    if (location) refresh()
   }, [isAtParty])
   useEffect(() => {
     if (panelOpen) {
@@ -182,19 +250,19 @@ export const HomeScreen = ({navigation}) => {
   }, [navigation, isAtParty]);
   return (
     <View style={styles.container}>
-      {region&&
+      {region &&
       <MapView
+        ref={mapRef}
         userInterfaceStyle={'dark'}
         style={StyleSheet.absoluteFill}
         initialRegion={region}
-        region={displayRegion}
-        onRegionChange={regionChange}
+        onRegionChangeComplete={regionChange}
         onPress={onMapPress}
       >
         
         {/*parties.map((party) => <Marker key={party.id} coordinate={{latitude: party.loc.latitude, longitude: party.loc.longitude}}><View style={{width: partySize(party), height: partySize(party), backgroundColor: colors.infoTransparent, borderRadius: partySize(party)/2, borderWidth: 2, borderStyle: "solid", borderColor: "#fff"}} />
           </Marker>)*/}
-          {parties.filter(doc => Object.keys(doc).filter(field => field.substring(0, 5) == "user_" && doc[field]).map((field) => field.substring(5)).some(r=> userData.friends.indexOf(r) >= 0)).map((party) => <Circle fillColor={colors[party.color]} strokeColor="#fff" key={party.id} center={{latitude: party.loc.latitude, longitude: party.loc.longitude}} radius={party.radius}></Circle>)}
+          {parties.filter(doc => Object.keys(doc).filter(field => field.substring(0, 5) == "user_" && doc[field]).map((field) => field.substring(5)).some(r=> [...userData.friends, userData.id].indexOf(r) >= 0)).map((party) => <Circle fillColor={colors[party.color]} strokeColor="#fff" key={party.id} center={{latitude: party.loc.latitude, longitude: party.loc.longitude}} radius={party.radius}></Circle>)}
 
           {location&&<Marker
         coordinate={location.coords}
@@ -208,25 +276,32 @@ export const HomeScreen = ({navigation}) => {
         
       {isAtParty && 
       <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
+        
         <View style={styles.infoView}>
           {/*<Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>*/}
           <View style={{flexDirection: 'row', alignItems: "center"}}>
-            <Icon name="thumb-up" size={20} color={colors.success}/>
-            <Text style={{marginLeft: 4, fontSize: 17, color: colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text></View>
+            <Icon name="thumb-up" size={20} color={userData && isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? colors.text : colors.success}/>
+            <Text style={{marginLeft: 4, fontSize: 17, color: userData && isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? colors.text : colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text></View>
           <View style={{flexDirection: 'row', alignItems: "center"}}>
-            <Icon name="thumb-down" size={20} color={colors.error}/>
-            <Text style={{marginLeft: 4, fontSize: 17, color: colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
+            <Icon name="thumb-down" size={20} color={userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}/>
+            <Text style={{marginLeft: 4, fontSize: 17, color: userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: "center"}}>
             <Icon name="account" size={20} color={colors.text}/>
             <Text style={{marginLeft: 4, fontSize: 17, color: "#fff"}}>{Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).length || 0}</Text>
           </View>
+          <View style={{justifyContent: "center"}}>
+          <IOSButton style="ghost" ap="primary" title={panelOpen?"Hide":"Show"} onPress={() => setPanelOpen(prev => !prev)} />
+        </View>
         </View>
         <View style={{margin: 32, marginTop: 8}}>
           {/*<IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(isAtParty.id, "police")}/>*/}
-          <IOSButton style="filled" ap="success" title="Good" top onPress={() => reportInfo(isAtParty.id, "good")} />
-          <IOSButton style="filled" ap="error" title="Bad" top onPress={() => reportInfo(isAtParty.id, "bad")} />
+          {panelOpen&&
+          <>
+          <IOSButton style={userData && isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? "filled" : "outline" } ap="success" title="Good" top onPress={() => isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? reportInfo(isAtParty.id, "good") : unreportInfo(isAtParty.id, "good")} />
+          <IOSButton style={userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? "filled" : "outline" } ap="error" title="Bad" top onPress={() => isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? reportInfo(isAtParty.id, "bad") : unreportInfo(isAtParty.id, "bad")} />
           <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />
+          </>}
           <IOSButton onPress={() => partyLoading ? {} : leaveParty(isAtParty.id)} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "Exit Party Mode"} top />
         </View>
       </View>}
