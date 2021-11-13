@@ -101,7 +101,7 @@ export const PartyPeopleScreen = ({navigation, route}) => {
     
     <View style={styles.container}>
         <ScrollView style={{marginHorizontal: 16}}>
-            {query.map(q => userData.friends && userData.friends.indexOf(q.id) !== -1 ? <Friend key={q.id} user={q} remove={() => removeFriend(q.id)} border /> : <PersonRequest key={q.id} user={q} onRequest={() => doAddFriend(q)} />)}
+            {query.sort((a, b) => b.score-a.score).map(q => userData.friends && userData.friends.indexOf(q.id) !== -1 ? <Friend key={q.id} user={q} remove={() => removeFriend(q.id)} border /> : <PersonRequest key={q.id} user={q} onRequest={() => doAddFriend(q)} />)}
         </ScrollView>
     </View>
   );

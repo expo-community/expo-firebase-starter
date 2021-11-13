@@ -14,6 +14,8 @@ import { useAtParty } from '../hooks';
 import { Icon } from '../components';
 import { useUserData } from '../hooks/useUserData';
 import * as Linking from "expo-linking"
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 export const HomeScreen = ({navigation}) => {
   const {colors} = useTheme()
@@ -31,6 +33,8 @@ export const HomeScreen = ({navigation}) => {
   const [panelOpen, setPanelOpen] = useState(true)
   const panelAnim = useRef(new Animated.Value(0)).current;
   const mapRef = useRef()
+  const confetti = useRef()
+  const [shoot, setShoot] = useState(false)
   const [animatedRegionChange, setAnimatedRegionChange] = useState(false)
 
   useEffect(() => {
@@ -105,22 +109,22 @@ export const HomeScreen = ({navigation}) => {
   }
 
   useEffect(() => {
-    if (location && centered && isAtParty && panelOpen) {
+    if (location && centered && isAtParty) {
       setAnimatedRegionChange(true)
       setRegion({
-        latitude: location.coords.latitude-0.025/5,
+        latitude: location.coords.latitude-0.025/10,
         longitude: location.coords.longitude,
         latitudeDelta: 0.025,
         longitudeDelta: 0.025,
       })
       mapRef.current.animateToRegion({
-        latitude: location.coords.latitude-0.025/5,
+        latitude: location.coords.latitude-0.025/10,
         longitude: location.coords.longitude,
         latitudeDelta: 0.025,
         longitudeDelta: 0.025,
       }, 500)
       
-    } else if (location && centered && isAtParty && !panelOpen) {
+    } /*else if (location && centered && isAtParty && !panelOpen) {
       console.log("close panel map animation")
       setAnimatedRegionChange(true)
       setRegion({
@@ -135,7 +139,7 @@ export const HomeScreen = ({navigation}) => {
         latitudeDelta: 0.025,
         longitudeDelta: 0.025,
       }, 500)
-    } else if (location && centered && !isAtParty) {
+    } */else if (location && centered && !isAtParty) {
       setRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -151,26 +155,26 @@ export const HomeScreen = ({navigation}) => {
       }, 500)
     }
     
-  }, [centered, isAtParty, panelOpen, location])
+  }, [centered, isAtParty, location])
 
   const sameCoords = (r) => {
     if (!location) return true
-    const tol = 0.0000001
-    return (Math.abs(r.latitude-location.coords.latitude) < tol || Math.abs(r.latitude-(location.coords.latitude-0.025/5))<tol) && Math.abs(r.longitude-location.coords.longitude)<tol
+    const tol = 0.000001
+    return (Math.abs(r.latitude-location.coords.latitude) < tol || Math.abs(r.latitude-(location.coords.latitude-0.025/10))<tol) && Math.abs(r.longitude-location.coords.longitude)<tol
   }
 
-  const regionChange = (region) => {
-    console.log(`loc: ${location} !sameCoords: ${!sameCoords(region)} !animated: ${!animatedRegionChange} && !refresh: ${!refreshing}`)
-    if (centered && location && !sameCoords(region) && !animatedRegionChange && !refreshing) {
+  const regionChange = (r) => {
+    console.log(`loc: ${location} !sameCoords: ${!sameCoords(r)} !animated: ${!animatedRegionChange} && !refresh: ${!refreshing}`)
+    setRegion(r)
+    if (centered && location && !sameCoords(r) && !animatedRegionChange && !refreshing) {
       
       //setDisplayRegion(null)
       setCentered(false)
     }
-    if (animatedRegionChange) {
+    if (animatedRegionChange || sameCoords(r)) {
       setAnimatedRegionChange(false)
       setCentered(true)
     }
-    setRegion(region)
   }
 
   const handleLogout = () => {
@@ -179,7 +183,10 @@ export const HomeScreen = ({navigation}) => {
 
   const atParty = () => {
     setPartyLoading(true)
-    attendParty(parties, location.coords).then(() => setPartyLoading(false)).catch(() => setPartyLoading(false))
+    setShoot(true)
+    attendParty(parties, location.coords).then(() => {
+      setPartyLoading(false)
+    }).catch(() => setPartyLoading(false))
   }
   useEffect(() => {
     AsyncStorage.getItem("em#").then((num) => {if (num) {
@@ -214,11 +221,6 @@ export const HomeScreen = ({navigation}) => {
 
   }
   useEffect(() => {
-    if (isAtParty) setPanelOpen(true)
-    else setPanelOpen(false)
-    if (location) refresh()
-  }, [isAtParty])
-  useEffect(() => {
     if (panelOpen) {
       showPartyPanel()
     } else hidePartyPanel()
@@ -248,7 +250,16 @@ export const HomeScreen = ({navigation}) => {
       title: isAtParty ? "Party Mode" : "Party Near You"
     });
   }, [navigation, isAtParty]);
+  const changeInfo = (field) => {
+    if (userData && isAtParty[field] && isAtParty[field].indexOf(userData.id) == -1) {
+      reportInfo(isAtParty.id, field)
+    } else {
+      unreportInfo(isAtParty.id, field)
+    }
+  }
   return (
+    <>
+    
     <View style={styles.container}>
       {region &&
       <MapView
@@ -271,8 +282,6 @@ export const HomeScreen = ({navigation}) => {
           <View style={{width: 15, height: 15, backgroundColor: colors.primary, borderRadius: 10, borderWidth: 2, borderStyle: "solid", borderColor: "rgba(255, 255, 255, 0.8)"}} />
           </Marker>}
       </MapView>}
-
-
         
       {isAtParty && 
       <View style={{position: "absolute", bottom: insets.bottom, width: "100%"}}>
@@ -280,28 +289,27 @@ export const HomeScreen = ({navigation}) => {
         <View style={styles.infoView}>
           {/*<Text style={{fontSize: 17, color: colors.warning}}>{atParty.police ? atParty.police.length : 0}</Text>*/}
           <View style={{flexDirection: 'row', alignItems: "center"}}>
+          <TouchableOpacity onPress={() => changeInfo("good")} style={{flexDirection: 'row', alignItems: "center", paddingHorizontal: 20, paddingVertical: 8}}>
             <Icon name="thumb-up" size={20} color={userData && isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? colors.text : colors.success}/>
-            <Text style={{marginLeft: 4, fontSize: 17, color: userData && isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? colors.text : colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text></View>
-          <View style={{flexDirection: 'row', alignItems: "center"}}>
-            <Icon name="thumb-down" size={20} color={userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}/>
-            <Text style={{marginLeft: 4, fontSize: 17, color: userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
+            <Text style={{marginLeft: 4, fontSize: 17, color: userData && isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? colors.text : colors.success}}>{isAtParty.good ? isAtParty.good.length : 0}</Text>
+          </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row', alignItems: "center"}}>
-            <Icon name="account" size={20} color={colors.text}/>
-            <Text style={{marginLeft: 4, fontSize: 17, color: "#fff"}}>{Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).length || 0}</Text>
+            <TouchableOpacity onPress={() => changeInfo("bad")} style={{flexDirection: 'row', alignItems: "center", paddingHorizontal: 20, paddingVertical: 8}}>
+              <Icon name="thumb-down" size={20} color={userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}/>
+              <Text style={{marginLeft: 4, fontSize: 17, color: userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? colors.text : colors.error}}>{isAtParty.bad ? isAtParty.bad.length : 0}</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{justifyContent: "center"}}>
-          <IOSButton style="ghost" ap="primary" title={panelOpen?"Hide":"Show"} onPress={() => setPanelOpen(prev => !prev)} />
+          <View style={{flexDirection: 'row', alignItems: "center", justifyContent: "center"}}>
+            <TouchableOpacity onPress={() => navigation.navigate("Party Info", {party: isAtParty})} style={{flexDirection: 'row', alignItems: "center", paddingHorizontal: 20, paddingVertical: 8}}>
+              <Icon name="account" size={20} color={colors.text}/>
+              <Text style={{marginLeft: 4, fontSize: 17, color: "#fff"}}>{Object.keys(isAtParty).filter(field => field.substring(0, 5) == "user_" && isAtParty[field]).length || 0}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        </View>
-        <View style={{margin: 32, marginTop: 8}}>
+        <View style={{margin: 32, marginTop: 0}}>
           {/*<IOSButton style="filled" ap="warning" title="Report Police" onPress={() => reportInfo(isAtParty.id, "police")}/>*/}
-          {panelOpen&&
-          <>
-          <IOSButton style={userData && isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? "filled" : "outline" } ap="success" title="Good" top onPress={() => isAtParty.good && isAtParty.good.indexOf(userData.id) == -1 ? reportInfo(isAtParty.id, "good") : unreportInfo(isAtParty.id, "good")} />
-          <IOSButton style={userData && isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? "filled" : "outline" } ap="error" title="Bad" top onPress={() => isAtParty.bad && isAtParty.bad.indexOf(userData.id) == -1 ? reportInfo(isAtParty.id, "bad") : unreportInfo(isAtParty.id, "bad")} />
-          <IOSButton style="filled" ap="info" title="Emergency Contact" top onPress={() => Linking.openURL("tel:"+number)} />
-          </>}
+          <IOSButton style="filled" ap="info" title="Emergency Contact" onPress={() => Linking.openURL("tel:"+number)} top />
           <IOSButton onPress={() => partyLoading ? {} : leaveParty(isAtParty.id)} style="filled" ap="primary" title={partyLoading ? <ActivityIndicator /> : "Exit Party Mode"} top />
         </View>
       </View>}
@@ -321,7 +329,19 @@ export const HomeScreen = ({navigation}) => {
             <IOSButton style="shadow" ap="primary" title={refreshing ? <ActivityIndicator /> : "Refresh"} onPress={() => refreshing ? {} : refresh()} />
           </View>
       </View>}
+      {shoot &&
+      <ConfettiCannon
+        count={200}
+        origin={{x: 200, y: 0}}
+        onAnimationEnd={() => setShoot(false)}
+        ref={confetti}
+        explosionSpeed={350}
+        fallSpeed={2500}
+        fadeOut
+        style={{zIndex: 10}}
+      />}
     </View>
+    </>
   );
 };
 

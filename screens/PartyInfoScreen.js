@@ -8,31 +8,36 @@ import { auth } from '../config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import IOSButton from '../components/IOSButton';
 import { useTheme } from '@react-navigation/native';
-import { useparty } from '../hooks';
+import { useAtParty, useparty } from '../hooks';
 import { attendParty, getUsers, leaveParty, reportInfo } from '../config/firebase';
 import * as Linking from 'expo-linking';
 import { useUserData } from '../hooks/useUserData';
 import Friend from '../components/Friend';
 import { Icon } from '../components';
+import PersonRequest from '../components/Person';
 
 export const PartyInfoScreen = ({navigation, route}) => {
   const {colors} = useTheme()
   const insets = useSafeAreaInsets()
-  const {party} = route.params
+  const [party, setParty] = useState(route.params.party)
   const [loaded, userData, filled] = useUserData()
   const [partyFriends, setPartyFriends] = useState([])
+  const isAtParty = useAtParty()
 
   useEffect(() => {
     if (userData && userData.friends) {
       var friendIDs = Object.keys(party).filter(field => field.substring(0, 5) == "user_" && party[field]).map((field) => field.substring(5))
-      friendIDs = friendIDs.filter((id) => userData.friends.indexOf(id) != -1)
+      if (!isAtParty || isAtParty.id !== party.id) friendIDs = friendIDs.filter((id) => userData.friends.indexOf(id) != -1)
       getUsers(friendIDs).then((snaps) => {
         const docs = []
         snaps.forEach((snap) => docs.push({...snap.data(), id: snap.id}))
         setPartyFriends(docs)
       })
     }
-  }, [userData])
+  }, [userData, party])
+  useEffect(() => {
+    if (isAtParty && isAtParty.id == party.id) setParty(isAtParty)
+  }, [isAtParty])
   // const [location, setLocation] = useState(null);
 
   /*useEffect(() => {
@@ -93,8 +98,8 @@ export const PartyInfoScreen = ({navigation, route}) => {
           <IOSButton style="filled" ap="primary" title="Directions" onPress={() => openDirections()}/>
         </View>
         <View style={{marginHorizontal: 16}}>
-          {partyFriends.length > 0 && <Text style={{fontSize: 26, color: "#fff", fontWeight: "800"}}>Friends At Party</Text>}
-          {partyFriends.map(q => <Friend key={q.id} user={q} remove={() => removeFriend(q.id)} />)}
+          {partyFriends.length > 0 && <Text style={{fontSize: 26, color: "#fff", fontWeight: "800"}}>{isAtParty && isAtParty.id == party.id ? "People At Party" : "Friends At Party"}</Text>}
+          {partyFriends.sort((a, b) => b.score-a.score).map(q => userData.friends && userData.friends.indexOf(q.id) !== -1 ? <Friend key={q.id} user={q} remove={() => removeFriend(q.id)} border /> : <PersonRequest key={q.id} user={q} onRequest={() => doAddFriend(q)} />)}
         </View>  
         </ScrollView> 
     </View>
