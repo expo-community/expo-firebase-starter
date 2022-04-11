@@ -30,7 +30,7 @@ Is a quicker way to start with Expo + Firebase (using JS SDK) projects. It inclu
 1. Create a new project using the firebase starter template.
 
 ```bash
-$ npx create-react-native-app --template https://github.com/expo-community/expo-firebase-starter
+npx create-react-native-app --template https://github.com/expo-community/expo-firebase-starter
 ```
 
 2. Rename the file `example.env` to `.env`
