@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // add firebase config
 const firebaseConfig = {
@@ -9,13 +10,15 @@ const firebaseConfig = {
   projectId: Constants.manifest.extra.projectId,
   storageBucket: Constants.manifest.extra.storageBucket,
   messagingSenderId: Constants.manifest.extra.messagingSenderId,
-  appId: Constants.manifest.extra.appId
+  appId: Constants.manifest.extra.appId,
 };
 
 // initialize firebase
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // initialize auth
-const auth = getAuth();
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 
 export { auth };
