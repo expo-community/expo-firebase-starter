@@ -9,13 +9,13 @@ const firebaseConfig = {
   projectId: Constants.manifest.extra.projectId,
   storageBucket: Constants.manifest.extra.storageBucket,
   messagingSenderId: Constants.manifest.extra.messagingSenderId,
-  appId: Constants.manifest.extra.appId
+  appId: Constants.manifest.extra.appId,
 };
 
 // initialize firebase
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // initialize auth
-const auth = getAuth();
+const auth = getAuth(app);
 
 export { auth };
