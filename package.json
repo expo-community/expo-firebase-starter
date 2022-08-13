@@ -10,8 +10,8 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-masked-view/masked-view": "0.2.7",
-    "@react-navigation/native": "^6.0.6",
-    "@react-navigation/stack": "^6.0.11",
+    "@react-navigation/native": "^6.0.11",
+    "@react-navigation/stack": "^6.2.2",
     "dotenv": "^10.0.0",
     "expo": "^46.0.0",
     "expo-constants": "~13.2.3",
