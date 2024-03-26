@@ -1,7 +1,6 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "ts:check": "tsc",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -35,9 +34,6 @@
     "@babel/runtime": "^7.9.0",
     "@types/react": "^18.2.65",
     "babel-preset-expo": "^9.5.0",
-    "install": "^0.13.0",
-    "npm": "^10.5.0",
-    "typescript": "^5.4.2"
   },
   "private": true
 }
