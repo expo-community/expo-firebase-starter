@@ -108,7 +108,7 @@ Main screens:
 - Forgot password
 - Home (Bare Minimum) with a logout button
 
-<img src="./screenshots/img1.png" height="640" alt="Login screen with validation>
+<img src="./screenshots/img1.png" height="640" alt="Login screen with validation">
 
 <img src="./screenshots/img2.png" height="640" alt="Successful sign up attempt">
 
