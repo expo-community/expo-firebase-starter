@@ -108,13 +108,13 @@ Main screens:
 - Forgot password
 - Home (Bare Minimum) with a logout button
 
-<img src="./screenshots/img1.png" height="420" alt="Login screen with validation>
+<img src="./screenshots/img1.png" height="640" alt="Login screen with validation>
 
-<img src="./screenshots/img2.png" height="420" alt="Successful sign up attempt">
+<img src="./screenshots/img2.png" height="640" alt="Successful sign up attempt">
 
-<img src="./screenshots/img3.png" height="420" alt="Forgot password screen">
+<img src="./screenshots/img3.png" height="640" alt="Forgot password screen">
 
-<img src="./screenshots/img3.png" height="420" alt="Validation on Signup screens">
+<img src="./screenshots/img3.png" height="640" alt="Validation on Signup screens">
 
 ## Development builds and React Native Firebase library
 
