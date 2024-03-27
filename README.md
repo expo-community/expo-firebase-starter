@@ -6,7 +6,7 @@
 
 Is a quicker way to start with Expo + Firebase (using JS SDK) projects. It includes:
 
-- based on Expo SDK `46`
+- based on Expo SDK `50`
 - navigation using `react-navigation` 6.x.x
 - Firebase JS SDK v9
 - Firebase as the backend for email auth
@@ -14,9 +14,9 @@ Is a quicker way to start with Expo + Firebase (using JS SDK) projects. It inclu
 - custom hook to toggle password field visibility on a TextInput
 - handles server errors using Formik
 - Login, Signup & Password Reset form built using Formik & yup
-- show/hide Password Field's visibility 👁
+- show/hide the Password Field's visibility 👁
 - uses a custom Provider using Context API & Firebase's `onAuthStateChanged` handler to check the user's auth state with
-- handles Forgot Password Reset using Firebase email method
+- handles Forgot Password Reset using the Firebase email method
 - uses [Expo Vector Icons](https://icons.expo.fyi/)
 - uses [KeyboardAwareScrollView](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package to handle keyboard appearance and automatically scrolls to focused TextInput
 - uses `dotenv` and `expo-constants` packages to manage environment variables (so that they are not exposed on public repositories)
@@ -44,10 +44,25 @@ MESSAGING_SENDER_ID=XXXX
 APP_ID=XXXX
 ```
 
-4. Start the project:
+## Run project
 
-- `yarn ios` -- open on iOS
-- `yarn android` -- open on Android
+To start the development server and run your project:
+
+```
+npx expo start
+```
+
+Alternate to using Expo Go, if you are building more than a hobby project or a prototype, make sure you [create a development build](https://docs.expo.dev/develop/development-builds/introduction/). You can either [locally compile your project](https://docs.expo.dev/guides/local-app-development/#local-builds-with-expo-dev-client) or [use EAS](https://docs.expo.dev/develop/development-builds/create-a-build/).
+
+To locally compile your app, run:
+
+```
+# Build native Android project
+npx expo run:android
+
+# Build native iOS project
+npx expo run:ios
+```
 
 ## File Structure
 
@@ -93,17 +108,17 @@ Main screens:
 - Forgot password
 - Home (Bare Minimum) with a logout button
 
-![Login screen with validation](https://i.imgur.com/cydaOYN.png)
+<img src="./screenshots/img1.png" height="420" alt="Login screen with validation>
 
-![Successful Signup](https://i.imgur.com/62kcirI.png)
+<img src="./screenshots/img2.png" height="420" alt="Successful sign up attempt">
 
-![Forgot Password](https://i.imgur.com/9J9a4Nl.png)
+<img src="./screenshots/img3.png" height="420" alt="Forgot password screen">
 
-![Validation on Signup screens](https://i.imgur.com/DG0wTjG.png)
+<img src="./screenshots/img3.png" height="420" alt="Validation on Signup screens">
 
 ## Development builds and React Native Firebase library
 
-This project uses Firebase JS SDK which doesn't support all services (such as Crashlytics, Dynamic Links, and Analytics). However, you can use `react-native-firebase` library in an Expo project by [creating a development build](https://docs.expo.dev/develop/development-builds/introduction/).
+This project uses Firebase JS SDK which doesn't support all services (such as Crashlytics, Dynamic Links, and Analytics). However, you can use the `react-native-firebase` library in an Expo project by [creating a development build](https://docs.expo.dev/develop/development-builds/introduction/).
 
 Both of these libraries can satisfy different project requirements. To learn about the differences between using Firebase JS SDK and React Native Firebase library when building your app with Expo, see the following sections from Expo's official documentation:
 
