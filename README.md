@@ -114,11 +114,11 @@ Main screens:
 
 <img src="./screenshots/img3.png" height="640" alt="Forgot password screen">
 
-<img src="./screenshots/img3.png" height="640" alt="Validation on Signup screens">
+<img src="./screenshots/img4.png" height="640" alt="Validation on Signup screens">
 
 ## Development builds and React Native Firebase library
 
-This project uses Firebase JS SDK which doesn't support all services (such as Crashlytics, Dynamic Links, and Analytics). However, you can use the `react-native-firebase` library in an Expo project by [creating a development build](https://docs.expo.dev/develop/development-builds/introduction/).
+This project uses Firebase JS SDK, which doesn't support all services (such as Crashlytics, Dynamic Links, and Analytics). However, you can use the `react-native-firebase` library in an Expo project by [creating a development build](https://docs.expo.dev/develop/development-builds/introduction/).
 
 Both of these libraries can satisfy different project requirements. To learn about the differences between using Firebase JS SDK and React Native Firebase library when building your app with Expo, see the following sections from Expo's official documentation:
 
