@@ -32,7 +32,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/runtime": "^7.9.0",
-    "@types/react": "^18.2.65",
     "babel-preset-expo": "^9.5.0",
   },
   "private": true
