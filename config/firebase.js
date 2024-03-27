@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
-// import { initializeAuth, getReactNativePersistence } from "firebase/auth";
-import { initializeAuth } from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import Constants from "expo-constants";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // add firebase config
 const firebaseConfig = {
@@ -17,15 +16,9 @@ const firebaseConfig = {
 // initialize firebase
 const app = initializeApp(firebaseConfig);
 
-//
-// Need to upgrade to Expo with typescrip inorder getReactNativePersistence to work.
-//
-
-//initialize auth
-// const auth = initializeAuth(app, {
-//   persistence: getReactNativePersistence(AsyncStorage),
-// });
-
-const auth = initializeAuth(app);
+// initialize auth
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 
 export { auth };
