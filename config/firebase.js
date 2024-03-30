@@ -16,7 +16,7 @@ const firebaseConfig = {
 // initialize firebase
 const app = initializeApp(firebaseConfig);
 
-// initialize auth
+// initialize auth; only for native platforms (Android and iOS)
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
