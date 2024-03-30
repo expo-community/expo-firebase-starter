@@ -6,7 +6,7 @@ export default {
     slug: "expo-firebase",
     privacy: "public",
     platforms: ["ios", "android"],
-    version: "0.15.0",
+    version: "0.19.0",
     orientation: "portrait",
     icon: "./assets/flame.png",
     splash: {
