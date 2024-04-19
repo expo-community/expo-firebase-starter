@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 12,
   },
-  innercontainer: {
+  innerContainer: {
     alignItems: "center",
   },
   screenTitle: {
