@@ -9,6 +9,7 @@ export const AppStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="LOS" component={HomeScreen} />
     </Stack.Navigator>
   );
 };
