@@ -1,5 +1,8 @@
 # expo-firebase-starter 🔥
 
+> [!CAUTION]
+> This repository is archived and no longer maintained. For up-to-date examples, check out [expo/examples](https://github.com/expo/examples) or create a project from an example by running `bun create expo --example` in your terminal.
+
 ![Supports Expo iOS](https://img.shields.io/badge/iOS-4630EB.svg?style=flat-square&logo=APPLE&labelColor=999999&logoColor=fff)
 ![Supports Expo Android](https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff)
 [![runs with Expo Go](https://img.shields.io/badge/Runs%20with%20Expo%20Go-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.dev/client)
